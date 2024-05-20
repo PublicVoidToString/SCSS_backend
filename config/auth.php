@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -36,9 +36,24 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'student',
+        ],
+
+        'administrator-api' => [ 
+            'driver' => 'jwt',
+            'provider' => 'administrator',
+        ],
+    
+        'pracodawca-api' => [
+            'driver' => 'jwt',
+            'provider' => 'pracodawca',
+        ],
+    
+        'pracownik-api' => [
+            'driver' => 'jwt',
+            'provider' => 'pracownikbiurakarier',
         ],
     ],
 
@@ -60,15 +75,22 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'student' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Student::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'administrator' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Administrator::class,
+        ],
+        'pracodawca' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Pracodawca::class,
+        ],
+        'pracownikbiurakarier' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\PracownikBiuraKarier::class,
+        ],
     ],
 
     /*
