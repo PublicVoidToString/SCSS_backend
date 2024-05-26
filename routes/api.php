@@ -18,6 +18,9 @@ use App\Http\Controllers\PracownikBiuraKarierAuthController;
 |
 */
 
+Route::post('/login', [UserAuthController::class, 'login']);
+Route::middleware('auth:user')->get('user/me', [UserAuthController::class, 'me']);
+
 Route::post('student/register', [StudentAuthController::class, 'register']);
 Route::post('student/login', [StudentAuthController::class, 'login']);
 Route::middleware('auth:student')->get('student/me', [StudentAuthController::class, 'me']);
