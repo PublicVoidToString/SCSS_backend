@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Model;
 
-class Student extends Authenticatable implements JWTSubject
+class Student extends Model
 {
 
     public $timestamps = false;
@@ -26,17 +25,6 @@ class Student extends Authenticatable implements JWTSubject
         self::FIELD_INDEX_NUMBER,
         self::FIELD_DESCRIPTION,
     ];
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-
+    
     use HasFactory;
 }

@@ -4,17 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-class Competence extends Model  
+class CareerOffice extends Model
 {
     public const FIELD_ID = 'id';
-    public const FIELD_NAME = 'name';
-    public const FIELD_DESCRIPTION = 'description';
+    public const FIELD_UNIVERSITY = 'university';
 
-    protected $table = 'competence';
+    protected $table = 'carrer_office';
 
     protected $fillable = [
-        self::FIELD_NAME,
-        self::FIELD_DESCRIPTION,
+        self::FIELD_UNIVERSITY
     ];
 
     use HasFactory;

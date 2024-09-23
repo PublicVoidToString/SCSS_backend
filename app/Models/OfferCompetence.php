@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Model;
 
-class OfferCompetence extends Authenticatable implements JWTSubject
+class OfferCompetence extends Model
 {
     public const FIELD_ID = 'id';
     public const FIELD_OFFER_ID = 'offer_id';
@@ -18,16 +17,6 @@ class OfferCompetence extends Authenticatable implements JWTSubject
         self::FIELD_OFFER_ID,
         self::FIELD_COMPETENCE_ID,
     ];
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
 
     use HasFactory;
 

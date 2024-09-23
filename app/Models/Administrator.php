@@ -3,14 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Model;
 
-
-class Administrator extends Authenticatable implements JWTSubject
+class Administrator extends Model
 {
-    use HasFactory;
-
     public const FIELD_ID = 'id';
     public const FIELD_NAME = 'name';
     public const FIELD_SURNAME = 'surname';
@@ -22,16 +18,6 @@ class Administrator extends Authenticatable implements JWTSubject
         self::FIELD_NAME,
         self::FIELD_SURNAME,
     ];
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
     
     use HasFactory;
 }
