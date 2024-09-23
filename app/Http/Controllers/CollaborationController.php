@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Administrator;
+use App\Models\Collaboration;
 
-class AdministratorController extends Controller
+class CollaborationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,11 +30,11 @@ class AdministratorController extends Controller
     {
         $data = $request->validated();
 
-        $administrator = new Administrator();
-        $administrator->name = $data['name'];
-        $administrator->surname = $data['surname'];
-        $administrator->save();
-        return response()->json(['data'=>$administrator]);
+        $collaboration = new Collaboration();
+        $collaboration->career_office_id = $data['careeroffice_id'];
+        $collaboration->employer_id = $data['employer_id'];
+        $collaboration->save();
+        return response()->json(['data'=>$collaboration]);
     }
 
     /**
@@ -59,11 +59,11 @@ class AdministratorController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validated();
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->name = $data['name'];
-            $administrator->surname = $data['surname'];
-            $administrator->save();
+        $collaboration = Collaboration::find($id);
+        if($collaboration != null){
+            $collaboration->career_office_id = $data['careeroffice_id'];
+            $collaboration->employer_id = $data['employer_id'];
+            $collaboration->save();
             return response()->json(['data'=>[]]);
         }
         return response()->json(['data'=>[]]);
@@ -74,10 +74,10 @@ class AdministratorController extends Controller
      */
     public function destroy(string $id)
     {
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->delete();
-            return response()->json(['data'=>$administrator]);
+        $collaboration = Collaboration::find($id);
+        if($collaboration != null){
+            $collaboration->delete();
+            return response()->json(['data'=>$collaboration]);
         }else
         return response()->json(['data'=>[]]);
     }

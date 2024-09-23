@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Administrator;
+use App\Models\Offer;
 
-class AdministratorController extends Controller
+class OfferController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,11 +30,12 @@ class AdministratorController extends Controller
     {
         $data = $request->validated();
 
-        $administrator = new Administrator();
-        $administrator->name = $data['name'];
-        $administrator->surname = $data['surname'];
-        $administrator->save();
-        return response()->json(['data'=>$administrator]);
+        $offer = new Offer();
+        $offer->employer_id = $data['employer_id'];
+        $offer->title = $data['title'];
+        $offer->description = $data['description'];
+        $offer->save();
+        return response()->json(['data'=>$offer]);
     }
 
     /**
@@ -59,11 +60,12 @@ class AdministratorController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validated();
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->name = $data['name'];
-            $administrator->surname = $data['surname'];
-            $administrator->save();
+        $offer = Offer::find($id);
+        if($offer != null){
+            $offer->employer_id = $data['employer_id'];
+            $offer->title = $data['title'];
+            $offer->description = $data['description'];
+            $offer->save();
             return response()->json(['data'=>[]]);
         }
         return response()->json(['data'=>[]]);
@@ -74,10 +76,10 @@ class AdministratorController extends Controller
      */
     public function destroy(string $id)
     {
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->delete();
-            return response()->json(['data'=>$administrator]);
+        $offer = Offer::find($id);
+        if($offer != null){
+            $offer->delete();
+            return response()->json(['data'=>$offer]);
         }else
         return response()->json(['data'=>[]]);
     }

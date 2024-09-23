@@ -3,27 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pracodawca;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class PracodawcaAuthController extends Controller
+class UserAuthController extends Controller
 {
     public function register(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email|unique:pracodawca,email',
-            'haslo' => 'required|min:6',
+            'email' => 'required|email|unique:user,email',
+            'password' => 'required|min:6',
         ]);
 
-        $pracodawca = new Pracodawca();
-        $pracodawca->email = $request->email;
-        $pracodawca->haslo = Hash::make($request->haslo);
-        $pracodawca->nazwa_firmy = $request->nazwa_firmy;
-        $pracodawca->save();
+        $user = new User();
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->role_id = $request->role_id;
+        $user->data_id = $request->data_id;
 
-        $token = JWTAuth::fromUser($pracodawca);
+        $user->save();
+
+        $token = JWTAuth::fromUser($user);
 
         return response()->json(['token' => $token]);
     }
@@ -32,7 +34,7 @@ class PracodawcaAuthController extends Controller
     {
         $credentials = $request->only('email', 'haslo');
 
-        if (!$token = Auth::guard('pracodawca')->attempt($credentials)) {
+        if (!$token = Auth::guard('user')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -41,6 +43,6 @@ class PracodawcaAuthController extends Controller
 
     public function me()
     {
-        return response()->json(Auth::guard('pracodawca')->user());
+        return response()->json(Auth::guard('user')->user());
     }
 }
