@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Employer;
 
-class PracownikBiuraKarierController extends Controller
+class EmployerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,13 @@ class PracownikBiuraKarierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validated();
+
+        $employer = new Employer();
+        $employer->company_name = $data['companyname'];
+        $employer->krs_number = $data['krsnumber'];
+        $employer->save();
+        return response()->json(['data'=>$employer]);
     }
 
     /**
@@ -51,7 +58,15 @@ class PracownikBiuraKarierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validated();
+        $employer = employer::find($id);
+        if($employer != null){
+            $employer->company_name = $data['companyname'];
+            $employer->krs_number = $data['krsnumber'];
+            $employer->save();
+            return response()->json(['data'=>[]]);
+        }
+        return response()->json(['data'=>[]]);
     }
 
     /**
@@ -59,6 +74,11 @@ class PracownikBiuraKarierController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $employer = employer::find($id);
+        if($employer != null){
+            $employer->delete();
+            return response()->json(['data'=>$employer]);
+        }else
+        return response()->json(['data'=>[]]);
     }
 }

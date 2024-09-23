@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Administrator;
+use App\Models\User;
 
-class AdministratorController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,11 +30,13 @@ class AdministratorController extends Controller
     {
         $data = $request->validated();
 
-        $administrator = new Administrator();
-        $administrator->name = $data['name'];
-        $administrator->surname = $data['surname'];
-        $administrator->save();
-        return response()->json(['data'=>$administrator]);
+        $user = new User();
+        $user->email = $data['email'];
+        $user->password = $data['password'];
+        $user->data_id = $data['data_id'];
+        $user->role_id = $data['role_id'];
+        $user->save();
+        return response()->json(['data'=>$user]);
     }
 
     /**
@@ -59,11 +61,13 @@ class AdministratorController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validated();
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->name = $data['name'];
-            $administrator->surname = $data['surname'];
-            $administrator->save();
+        $user = User::find($id);
+        if($user != null){
+            $user->email = $data['email'];
+            $user->password = $data['password'];
+            $user->data_id = $data['data_id'];
+            $user->role_id = $data['role_id'];
+            $user->save();
             return response()->json(['data'=>[]]);
         }
         return response()->json(['data'=>[]]);
@@ -74,10 +78,10 @@ class AdministratorController extends Controller
      */
     public function destroy(string $id)
     {
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->delete();
-            return response()->json(['data'=>$administrator]);
+        $user = User::find($id);
+        if($user != null){
+            $user->delete();
+            return response()->json(['data'=>$user]);
         }else
         return response()->json(['data'=>[]]);
     }

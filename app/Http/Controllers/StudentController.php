@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Student;
 
 class StudentController extends Controller
 {
@@ -27,7 +28,17 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validated();
+
+        $student = new Student();
+        $student->name = $data['name'];
+        $student->surname = $data['surname'];
+        $student->indexnumber = $data['indexnumber'];
+        $student->description = $data['description'];
+        $student->photourl = $data['photourl'];
+
+        $student->save();
+        return response()->json(['data'=>$student]);
     }
 
     /**
@@ -51,7 +62,18 @@ class StudentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validated();
+        $student = Student::find($id);
+        if($student != null){
+            $student->name = $data['name'];
+            $student->surname = $data['surname'];
+            $student->indexnumber = $data['indexnumber'];
+            $student->description = $data['description'];
+            $student->photourl = $data['photourl'];
+            $student->save();
+            return response()->json(['data'=>[]]);
+        }
+        return response()->json(['data'=>[]]);
     }
 
     /**
@@ -59,6 +81,11 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $student = Student::find($id);
+        if($student != null){
+            $student->delete();
+            return response()->json(['data'=>$student]);
+        }else
+        return response()->json(['data'=>[]]);
     }
 }
