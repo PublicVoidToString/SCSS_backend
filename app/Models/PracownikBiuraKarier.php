@@ -9,17 +9,12 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class PracownikBiuraKarier extends Authenticatable implements JWTSubject
 {
     public const FIELD_ID = 'id';
-    
-    public const FIELD_EMAIL = 'email';
-    
-    public const FIELD_PASSWORD = 'haslo';
+    public const FIELD_UNIVERSITY = 'university';
 
-
-    protected $table = 'pracownikbiurakarier';
+    protected $table = 'carreroffice';
 
     protected $fillable = [
-        self::FIELD_EMAIL,
-        self::FIELD_PASSWORD,
+        self::FIELD_UNIVERSITY
     ];
 
     public function getJWTIdentifier()

@@ -14,9 +14,12 @@ class User extends Authenticatable implements JWTSubject
 
     public const FIELD_ID = 'id';
     public const FIELD_EMAIL= 'email';
-    public const FIELD_PASSWORD = 'haslo';
-    public const FIELD_ID_DATA = 'id_data';
-    public const FIELD_ID_ROLE = 'id_role';
+    public const FIELD_PASSWORD = 'password';
+    public const FIELD_DATA_ID = 'data_id';
+    public const FIELD_ROLE_ID = 'role_id';
+
+    protected $table = 'users';
+
 
 
     /**
@@ -27,8 +30,8 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         self::FIELD_EMAIL,
         self::FIELD_PASSWORD,
-        self::FIELD_ID_DATA,
-        self::FIELD_ID_ROLE,
+        self::FIELD_DATA_ID,
+        self::FIELD_ROLE_ID,
     ];
 
     /**
