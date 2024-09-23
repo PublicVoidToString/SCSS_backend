@@ -6,17 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Pracodawca extends Authenticatable implements JWTSubject
+class CarrerOffice extends Authenticatable implements JWTSubject
 {
     public const FIELD_ID = 'id';
-    public const FIELD_COMPANY_NAME = 'companyname';
-    public const FIELD_KRS_NUMBER = 'krsnumber';
+    public const FIELD_UNIVERSITY = 'university';
 
-    protected $table = 'employer';
+    protected $table = 'carrer_office';
 
     protected $fillable = [
-        self::FIELD_COMPANY_NAME,
-        self::FIELD_KRS_NUMBER,
+        self::FIELD_UNIVERSITY
     ];
 
     public function getJWTIdentifier()

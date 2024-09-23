@@ -12,7 +12,7 @@ class StudentCompetence extends Authenticatable implements JWTSubject
     public const FIELD_STUDENT_ID = 'student_id';
     public const FIELD_COMPETENCE_ID = 'competence_id';
 
-    protected $table = 'studentcompetence';
+    protected $table = 'student_competence';
 
     protected $fillable = [
         self::FIELD_STUDENT_ID,
@@ -27,6 +27,16 @@ class StudentCompetence extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, self::FIELD_STUDENT_ID);
+    }
+
+    public function competence()
+    {
+        return $this->belongsTo(Competence::class, self::FIELD_COMPETENCE_ID);
     }
 
     use HasFactory;

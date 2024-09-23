@@ -20,10 +20,11 @@ class Student extends Authenticatable implements JWTSubject
     protected $table = 'student';
 
     protected $fillable = [
-        self::FIELD_PHOTO,
+        self::FIELD_PHOTO_URL,
         self::FIELD_NAME,
         self::FIELD_SURNAME,
         self::FIELD_INDEX_NUMBER,
+        self::FIELD_DESCRIPTION,
     ];
 
     public function getJWTIdentifier()

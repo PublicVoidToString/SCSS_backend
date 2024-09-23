@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pracownikbiurakarier', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('haslo');
+            $table->string('password');
+            $table->unsignedBigInteger('data_id')->nullable();
+            $table->unsignedBigInteger('role_id');
+            $table->rememberToken();
             $table->timestamps();
+
+            // Add foreign key constraints
+            $table->foreign('role_id')->references('id')->on('role')->onDelete('cascade');
         });
     }
 
@@ -24,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pracownikbiurakarier');
+        Schema::dropIfExists('users');
     }
 };

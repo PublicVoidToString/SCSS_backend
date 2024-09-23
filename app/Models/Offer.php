@@ -33,4 +33,9 @@ class Offer extends Authenticatable implements JWTSubject
     }
 
     use HasFactory;
+
+    public function employer()
+    {
+        return $this->belongsTo(Employer::class, self::FIELD_EMPLOYER_ID);
+    }
 }

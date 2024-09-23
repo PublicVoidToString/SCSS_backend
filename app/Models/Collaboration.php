@@ -29,5 +29,15 @@ class Collaboration extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function careerOffice()
+    {
+        return $this->belongsTo(CarrerOffice::class, self::FIELD_CAREER_OFFICE_ID);
+    }
+
+    public function employer()
+    {
+        return $this->belongsTo(Employer::class, self::FIELD_EMPLOYER_ID);
+    }
+
     use HasFactory;
 }

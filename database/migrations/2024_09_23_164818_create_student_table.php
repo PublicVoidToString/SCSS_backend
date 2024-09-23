@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('student', function (Blueprint $table) {
-            $table->id(); 
-            $table->string('email')->unique(); 
-            $table->string('haslo'); 
-            $table->string('zdjecie')->nullable(); 
-            $table->text('opis')->nullable(); 
-            $table->text('kompetencje')->nullable(); 
-
+            $table->id(); // Primary key
+            $table->string('name');
+            $table->string('surname'); 
+            $table->string('indexnumber')->unique();
+            $table->text('description')->nullable();
+            $table->string('photourl')->nullable();
         });
     }
 
