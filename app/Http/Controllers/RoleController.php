@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Role;
 
-class PracodawcaController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,12 @@ class PracodawcaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validated();
+
+        $role = new Role();
+        $role->role = $data['role'];
+        $role->save();
+        return response()->json(['data'=>$role]);
     }
 
     /**
@@ -51,7 +57,14 @@ class PracodawcaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validated();
+        $role = Role::find($id);
+        if($role != null){
+            $role->role = $data['role'];
+            $role->save();
+            return response()->json(['data'=>[]]);
+        }
+        return response()->json(['data'=>[]]);
     }
 
     /**
@@ -59,6 +72,11 @@ class PracodawcaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::find($id);
+        if($role != null){
+            $role->delete();
+            return response()->json(['data'=>$role]);
+        }else
+        return response()->json(['data'=>[]]);
     }
 }

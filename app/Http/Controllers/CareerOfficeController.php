@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Administrator;
+use App\Models\CareerOffice;
 
-class AdministratorController extends Controller
+class CareerOfficeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,11 +30,10 @@ class AdministratorController extends Controller
     {
         $data = $request->validated();
 
-        $administrator = new Administrator();
-        $administrator->name = $data['name'];
-        $administrator->surname = $data['surname'];
-        $administrator->save();
-        return response()->json(['data'=>$administrator]);
+        $career_office = new CareerOffice();
+        $career_office->university = $data['university'];
+        $career_office->save();
+        return response()->json(['data'=>$career_office]);
     }
 
     /**
@@ -59,11 +58,10 @@ class AdministratorController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validated();
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->name = $data['name'];
-            $administrator->surname = $data['surname'];
-            $administrator->save();
+        $career_office = CareerOffice::find($id);
+        if($career_office != null){
+            $career_office->university = $data['university'];
+            $career_office->save();
             return response()->json(['data'=>[]]);
         }
         return response()->json(['data'=>[]]);
@@ -74,10 +72,10 @@ class AdministratorController extends Controller
      */
     public function destroy(string $id)
     {
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->delete();
-            return response()->json(['data'=>$administrator]);
+        $career_office = CareerOffice::find($id);
+        if($career_office != null){
+            $career_office->delete();
+            return response()->json(['data'=>$career_office]);
         }else
         return response()->json(['data'=>[]]);
     }

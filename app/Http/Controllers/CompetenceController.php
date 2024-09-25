@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Administrator;
+use App\Models\Competence;
 
-class AdministratorController extends Controller
+class CompetenceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,11 +30,11 @@ class AdministratorController extends Controller
     {
         $data = $request->validated();
 
-        $administrator = new Administrator();
-        $administrator->name = $data['name'];
-        $administrator->surname = $data['surname'];
-        $administrator->save();
-        return response()->json(['data'=>$administrator]);
+        $competence = new Competence();
+        $competence->name = $data['name'];
+        $competence->description = $data['description'];
+        $competence->save();
+        return response()->json(['data'=>$competence]);
     }
 
     /**
@@ -59,11 +59,11 @@ class AdministratorController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validated();
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->name = $data['name'];
-            $administrator->surname = $data['surname'];
-            $administrator->save();
+        $competence = Competence::find($id);
+        if($competence != null){
+            $competence->name = $data['name'];
+            $competence->description = $data['description'];
+            $competence->save();
             return response()->json(['data'=>[]]);
         }
         return response()->json(['data'=>[]]);
@@ -74,10 +74,10 @@ class AdministratorController extends Controller
      */
     public function destroy(string $id)
     {
-        $administrator = Administrator::find($id);
-        if($administrator != null){
-            $administrator->delete();
-            return response()->json(['data'=>$administrator]);
+        $competence = Competence::find($id);
+        if($competence != null){
+            $competence->delete();
+            return response()->json(['data'=>$competence]);
         }else
         return response()->json(['data'=>[]]);
     }
