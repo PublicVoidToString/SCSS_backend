@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
 
-    public $timestamps = false;
     public const FIELD_ID = 'id';
     public const FIELD_NAME = 'name';
     public const FIELD_SURNAME = 'surname';

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +10,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    public const ROLE_STUDENT = 1;
+    public const ROLE_EMPLOYER = 2;
+    public const ROLE_CAREEROFFICE = 3;
+    public const ROLE_ADMINISTRATOR = 4;
 
     public const FIELD_ID = 'id';
     public const FIELD_EMAIL = 'email';
@@ -47,13 +51,25 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function data()
+    {
+        switch ($this->role_id) {
+            case self::ROLE_STUDENT:
+                return $this->belongsTo(Student::class, 'data_id');
+            case self::ROLE_EMPLOYER:
+                return $this->belongsTo(Employer::class, 'data_id');
+            case self::ROLE_ADMINISTRATOR:
+                return $this->belongsTo(Administrator::class, 'data_id');
+            case self::ROLE_CAREEROFFICE:
+                return $this->belongsTo(CareerOffice::class, 'data_id');
+            default:
+                return null;
+        }
+    }
+
     public static function create(array $attributes = [])
     {
-        // Hash the password before saving
-        if (isset($attributes[self::FIELD_PASSWORD])) {
-            $attributes[self::FIELD_PASSWORD] = password_hash($attributes[self::FIELD_PASSWORD], PASSWORD_BCRYPT);
-        }
-
         return parent::create($attributes);
     }
+
 }

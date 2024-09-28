@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('student', function (Blueprint $table) {
             $table->id(); // Primary key
-            $table->string('name');
-            $table->string('surname'); 
-            $table->string('indexnumber')->unique();
+            $table->string('name')->nullable();
+            $table->string('surname')->nullable(); 
+            $table->string('indexnumber')->nullable()->unique();
             $table->text('description')->nullable();
             $table->string('photourl')->nullable();
+            $table->timestamps();
         });
     }
 

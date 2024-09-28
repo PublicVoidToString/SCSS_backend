@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('competence_id');
+            $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('student_id')->references('id')->on('student')->onDelete('cascade');

@@ -36,24 +36,21 @@ return [
     */
 
     'guards' => [
-        'api' => [
-            'driver' => 'jwt',
-            'provider' => 'student',
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
         ],
 
-        'administrator-api' => [ 
+        'api' => [
             'driver' => 'jwt',
-            'provider' => 'administrator',
+            'provider' => 'users',
         ],
-    
-        'pracodawca-api' => [
-            'driver' => 'jwt',
-            'provider' => 'pracodawca',
-        ],
-    
-        'pracownik-api' => [
-            'driver' => 'jwt',
-            'provider' => 'pracownikbiurakarier',
+
+        'user' => [
+        'driver' => 'jwt', 
+        // session or jwt; session will require id from the cookier;
+        // jwt is stateless so requires acquisition each time
+        'provider' => 'users',
         ],
     ],
 
@@ -75,21 +72,9 @@ return [
     */
 
     'providers' => [
-        'student' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Student::class,
-        ],
-        'administrator' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Administrator::class,
-        ],
-        'pracodawca' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Pracodawca::class,
-        ],
-        'pracownikbiurakarier' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\PracownikBiuraKarier::class,
+            'model' => App\Models\User::class,
         ],
     ],
 

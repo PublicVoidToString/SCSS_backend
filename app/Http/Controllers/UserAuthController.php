@@ -7,32 +7,100 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Log;
 
 class UserAuthController extends Controller
 {
     public function register(Request $request)
     {
+
+        // exception handling is managed by Handler.php
         $this->validate($request, [
-            'email' => 'required|email|unique:user,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
+            'role_id' => 'required|integer',
         ]);
+
+        $roleId = $request->role_id;
+       
+        $dataId = null;
+        switch ($roleId) {
+            case User::ROLE_STUDENT:
+                $this->validate($request, [
+                    'indexnumber' => 'required|string|unique:student,indexnumber',
+                ]);
+
+                $student = \App\Models\Student::create([
+                    'indexnumber' => $request->indexnumber,
+                ]);
+
+                $dataId = $student->id;
+                break;
+
+            case User::ROLE_EMPLOYER:
+                $this->validate($request, [
+                    'company_name' => 'required|string',
+                    'position' => 'required|string',
+                ]);
+
+                $employer = \App\Models\Employer::create([
+                    'company_name' => $request->company_name,
+                    'position' => $request->position,
+                ]);
+
+                $dataId = $employer->id;
+                break;
+
+            case USER::ROLE_ADMINISTRATOR:
+                $this->validate($request, [
+                    'department' => 'required|string',
+                ]);
+
+                $administrator = \App\Models\Administrator::create([
+                    'department' => $request->department,
+                ]);
+
+                $dataId = $administrator->id;
+                break;
+
+            case USER::ROLE_CAREEROFFICE:
+                $this->validate($request, [
+                    'office_name' => 'required|string',
+                ]);
+
+                $careerOffice = \App\Models\CareerOffice::create([
+                    'office_name' => $request->office_name,
+                ]);
+
+                $dataId = $careerOffice->id;
+                break;
+
+            default:
+                return response()->json(['error' => 'Invalid role'], 400);
+        }
 
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->role_id = $request->role_id;
-        $user->data_id = $request->data_id;
+        $user->data_id = $dataId;
+
+        log::info('User before save', $user->toArray());
 
         $user->save();
 
+        // Generate JWT token
         $token = JWTAuth::fromUser($user);
 
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'token' => $token,
+            'user' => $user,
+        ]);
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'haslo');
+        $credentials = $request->only('email', 'password');
 
         if (!$token = Auth::guard('user')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);

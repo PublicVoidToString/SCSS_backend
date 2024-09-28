@@ -15,13 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('password');
-            $table->unsignedBigInteger('data_id')->nullable();
-            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('data_id'); // Foreign key that points to different tables
+            $table->integer('role_id'); // Role identifier (1,2,3,4 ids - defined in User entity)
             $table->rememberToken();
             $table->timestamps();
-
-            // Add foreign key constraints
-            $table->foreign('role_id')->references('id')->on('role')->onDelete('cascade');
         });
     }
 

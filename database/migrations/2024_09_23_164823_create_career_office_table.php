@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('career_office', function (Blueprint $table) {
             $table->id();
             $table->string('university');
+            $table->timestamps();
         });
     }
 

@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('offer', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employer_id');
-            $table->string('title');
+            $table->string('title')->nullable(); ;
             $table->text('description')->nullable();
+            $table->timestamps();
 
             $table->foreign('employer_id')->references('id')->on('employer')->onDelete('cascade');
         });

@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('careeroffice_id');
             $table->unsignedBigInteger('employer_id');
+            $table->timestamps();
 
             $table->foreign('careeroffice_id')->references('id')->on('career_office')->onDelete('cascade');
             $table->foreign('employer_id')->references('id')->on('employer')->onDelete('cascade');

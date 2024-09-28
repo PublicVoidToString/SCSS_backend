@@ -2,10 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StudentAuthController;
-use App\Http\Controllers\AdministratorAuthController;
-use App\Http\Controllers\PracodawcaAuthController;
-use App\Http\Controllers\PracownikBiuraKarierAuthController;
+use App\Http\Controllers\UserAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +15,17 @@ use App\Http\Controllers\PracownikBiuraKarierAuthController;
 |
 */
 
-Route::post('/login', [UserAuthController::class, 'login']);
-Route::middleware('auth:user')->get('user/me', [UserAuthController::class, 'me']);
+// http://127.0.0.1:8000/api/register
+Route::post('/register', [UserAuthController::class, 'register']);
 
+// http://127.0.0.1:8000/api/login
+Route::post('/login', [UserAuthController::class, 'login']);
+
+// Route to get logged-in user information, requires authentication
+Route::middleware('auth:api')->get('/user/me', [UserAuthController::class, 'me']);
+
+
+/*
 Route::post('student/register', [StudentAuthController::class, 'register']);
 Route::post('student/login', [StudentAuthController::class, 'login']);
 Route::middleware('auth:student')->get('student/me', [StudentAuthController::class, 'me']);
@@ -52,3 +57,5 @@ Route::middleware('auth:pracodawca-api')->get('/user', function (Request $reques
 Route::middleware('auth:pracownik-api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+*/
