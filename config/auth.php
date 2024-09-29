@@ -36,11 +36,6 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -49,7 +44,7 @@ return [
         'user' => [
         'driver' => 'jwt', 
         // session or jwt; session will require id from the cookier;
-        // jwt is stateless so requires acquisition each time
+        // jwt is stateless so requires acquisition each time - will need that for vue
         'provider' => 'users',
         ],
     ],

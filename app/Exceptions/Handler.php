@@ -33,18 +33,18 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-    
+        // validation exception - will return list of error
         if ($exception instanceof ValidationException) {
-            return $this->invalidJson($request, $exception);
+            return response()->json([
+                'errors' => $exception->validator->errors(),
+            ], 422); 
         }
 
-        return parent::render($request, $exception);
-    }
-
-    protected function invalidJson($request, ValidationException $exception)
-    {
+        // default error hanlding
         return response()->json([
-            'errors' => $exception->validator->errors(),
-        ], 422);   
+            'message' => $exception->getMessage()
+            ],Response::HTTP_INTERNAL_SERVER_ERROR 
+        );
+
     }
 }

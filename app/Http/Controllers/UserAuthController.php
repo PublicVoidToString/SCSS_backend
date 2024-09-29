@@ -111,6 +111,14 @@ class UserAuthController extends Controller
 
     public function me()
     {
-        return response()->json(Auth::guard('user')->user());
+        $user = Auth::guard('user')->user();
+
+        // Load the associated 'data' based on the role_id
+        $data = $user->data ? $user->data->first() : null;
+
+        
+        return response()->json([
+            'user' => $user,
+        ]);
     }
 }
