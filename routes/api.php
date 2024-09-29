@@ -65,3 +65,6 @@ Route::middleware('auth:pracownik-api')->get('/user', function (Request $request
 */
 
 Route::post('/register', [UserController::class, 'store']);
+
+Route::get('/admin/employers', [EmployerController::class, 'index']);
+Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);

@@ -81,4 +81,30 @@ class AdministratorController extends Controller
         }else
         return response()->json(['data'=>[]]);
     }
+
+    public function verifyEmployer(Request $request, string $employerId)
+    {
+        // Walidacja danych
+        $data = $request->validate([
+            'verified' => 'required|int',
+        ]);
+
+        // Znajdź pracodawcę po ID
+        $employer = Employer::find($employerId);
+
+        if ($employer) {
+            // Ustawienie pola 'verified' na podaną wartość
+            $employer->verified = $data['verified'];
+            $employer->save();
+
+            return response()->json([
+                'message' => 'Employer verification status updated successfully.',
+                'data' => $employer
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Employer not found.'
+        ], 404);
+    }
 }

@@ -12,7 +12,11 @@ class EmployerController extends Controller
      */
     public function index()
     {
-        //
+        // Pobieranie tylko niezweryfikowanych pracodawców
+        $unverifiedEmployers = Employer::where('verified', Employer::NOT_VERIFIED)->get();
+
+        // Zwracanie danych w formacie JSON
+        return response()->json(['data' => $unverifiedEmployers], 200);
     }
 
     /**
@@ -33,6 +37,8 @@ class EmployerController extends Controller
             'krsnumber' => 'required|string|max:20',
             'companyname' => 'required|string|max:255',
         ]);
+
+        $data['verified'] = Employer::NOT_VERIFIED;
 
         // Tworzenie rekordu pracodawcy
         $employer = Employer::create($data);
