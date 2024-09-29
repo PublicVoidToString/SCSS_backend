@@ -26,14 +26,22 @@ class CareerOfficeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $userId)
     {
-        $data = $request->validated();
+        // Walidacja danych biura karier
+        $data = $request->validate([
+            'university' => 'required|string|max:255',
+        ]);
 
-        $career_office = new CareerOffice();
-        $career_office->university = $data['university'];
-        $career_office->save();
-        return response()->json(['data'=>$career_office]);
+        // Tworzenie rekordu biura karier
+        $career_office = CareerOffice::create($data);
+
+        // Przypisanie data_id w tabeli users do id biura karier
+        $user = User::find($userId);
+        $user->data_id = $career_office->id;
+        $user->save();
+
+        return response()->json(['data' => $career_office], 201);
     }
 
     /**

@@ -26,19 +26,26 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $userId)
     {
-        $data = $request->validated();
+        // Walidacja danych studenta
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'indexnumber' => 'required|string|max:20',
+            'description' => 'nullable|string',
+            'photourl' => 'nullable|string|max:255',
+        ]);
 
-        $student = new Student();
-        $student->name = $data['name'];
-        $student->surname = $data['surname'];
-        $student->indexnumber = $data['indexnumber'];
-        $student->description = $data['description'];
-        $student->photourl = $data['photourl'];
+        // Tworzenie rekordu studenta
+        $student = Student::create($data);
 
-        $student->save();
-        return response()->json(['data'=>$student]);
+        // Przypisanie data_id w tabeli users do id studenta
+        $user = User::find($userId);
+        $user->data_id = $student->id;
+        $user->save();
+
+        return response()->json(['data' => $student], 201);
     }
 
     /**
