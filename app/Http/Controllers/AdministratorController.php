@@ -107,4 +107,53 @@ class AdministratorController extends Controller
             'message' => 'Employer not found.'
         ], 404);
     }
+
+    public function addToBlackList(Request $request, $userId)
+    {
+        // Sprawdź, czy użytkownik już nie jest na czarnej liście
+        $isAlreadyBlacklisted = BlackList::where('user_id', $userId)->first();
+
+        if ($isAlreadyBlacklisted) {
+            return response()->json([
+                'message' => 'User is already blacklisted.'
+            ], 400);
+        }
+
+        // Sprawdzenie, czy użytkownik istnieje
+        $user = User::find($userId);
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found.'
+            ], 404);
+        }
+
+        // Dodanie użytkownika do czarnej listy
+        $blacklist = new BlackList();
+        $blacklist->user_id = $userId;
+        $blacklist->save();
+
+        return response()->json([
+            'message' => 'User added to blacklist successfully.',
+            'data' => $blacklist
+        ], 201);
+    }
+
+    public function removeFromBlackList($userId)
+    {
+        // Sprawdzenie, czy użytkownik jest na czarnej liście
+        $blacklistEntry = BlackList::where('user_id', $userId)->first();
+
+        if ($blacklistEntry) {
+            $blacklistEntry->delete();
+
+            return response()->json([
+                'message' => 'User removed from blacklist successfully.'
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'User not found on the blacklist.'
+        ], 404);
+    }
+
 }

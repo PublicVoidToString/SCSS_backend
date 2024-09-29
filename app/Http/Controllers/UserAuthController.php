@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\BlackList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -101,6 +102,12 @@ class UserAuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+
+        // Sprawdzenie, czy użytkownik jest na czarnej liście
+        $user = User::where('email', $credentials['email'])->first();
+        if ($user && BlackList::where('user_id', $user->id)->exists()) {
+            return response()->json(['error' => 'User is blacklisted'], 403);
+        }
 
         if (!$token = Auth::guard('user')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
