@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employer', function (Blueprint $table) {
+        Schema::create('blacklist', function (Blueprint $table) {
             $table->id();
-            $table->string('companyname')->nullable(); ;
-            $table->string('krsnumber')->nullable(); ;
-            $table->string('verified')->nullable(); ;
+            $table->integer('user_id');
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employer');
+        Schema::dropIfExists('blacklist');
     }
 };

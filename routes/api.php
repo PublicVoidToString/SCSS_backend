@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CareerOfficeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EmployerController;
+use App\Http\Controllers\AdministratorController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ use App\Http\Controllers\EmployerController;
 */
 
 // http://127.0.0.1:8000/api/register
-Route::post('/register', [UserAuthController::class, 'register']);
+//Route::post('/register', [UserAuthController::class, 'register']);
 
 // http://127.0.0.1:8000/api/login
 Route::post('/login', [UserAuthController::class, 'login']);
@@ -64,7 +66,7 @@ Route::middleware('auth:pracownik-api')->get('/user', function (Request $request
 
 */
 
-Route::post('/register', [UserController::class, 'store']);
+Route::post('/register', [UserAuthController::class, 'register']);
 
 Route::get('/admin/employers', [EmployerController::class, 'index']);
 Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);

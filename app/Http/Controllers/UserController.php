@@ -28,43 +28,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Walidacja danych użytkownika
-        $data = $request->validate([
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-            'role_id' => 'required|integer', // Rola musi być przekazana
-        ]);
-
-        // Tworzenie rekordu użytkownika w tabeli users
-        $user = User::create([
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role_id' => $data['role_id'],
-        ]);
-
-        // Obsługa specyficznych danych dla każdej roli
-        switch ($user->role_id) {
-            case User::ROLE_STUDENT:
-                $studentController = new StudentController();
-                $studentResponse = $studentController->store($request, $user->id);
-                break;
-            
-            case User::ROLE_EMPLOYER:
-                $employerController = new EmployerController();
-                $employerResponse = $employerController->store($request, $user->id);
-                break;
-
-            case User::ROLE_CAREEROFFICE:
-                $careerOfficeController = new CareerOfficeController();
-                $careerOfficeResponse = $careerOfficeController->store($request, $user->id);
-                break;
-            
-            case User::ROLE_ADMINISTRATOR:
-                // W przypadku administratora tworzymy rekord bez dodatkowych danych
-                break;
-        }
-
-        return response()->json(['data' => $user], 201);
+        //
     }
 
     /**

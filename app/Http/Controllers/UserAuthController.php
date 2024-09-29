@@ -40,13 +40,15 @@ class UserAuthController extends Controller
 
             case User::ROLE_EMPLOYER:
                 $this->validate($request, [
-                    'company_name' => 'required|string',
-                    'position' => 'required|string',
+                    'companyname' => 'required|string',
+                    'krsnumber' => 'required|string',
+                    'verified' => 'integer',
                 ]);
 
                 $employer = \App\Models\Employer::create([
-                    'company_name' => $request->company_name,
-                    'position' => $request->position,
+                    'companyname' => $request->companyname,
+                    'krsnumber' => $request->position,
+                    'verified' => \App\Models\Employer::NOT_VERIFIED,
                 ]);
 
                 $dataId = $employer->id;
