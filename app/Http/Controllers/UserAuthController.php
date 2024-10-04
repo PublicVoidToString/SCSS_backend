@@ -23,7 +23,7 @@ class UserAuthController extends Controller
         ]);
 
         $roleId = $request->role_id;
-       
+
         $dataId = null;
         switch ($roleId) {
             case User::ROLE_STUDENT:
@@ -47,7 +47,7 @@ class UserAuthController extends Controller
 
                 $employer = \App\Models\Employer::create([
                     'companyname' => $request->companyname,
-                    'krsnumber' => $request->position,
+                    'krsnumber' => $request->krsnumber,
                     'verified' => \App\Models\Employer::NOT_VERIFIED,
                 ]);
 
@@ -125,7 +125,7 @@ class UserAuthController extends Controller
         // Load the associated 'data' based on the role_id
         $data = $user->data ? $user->data->first() : null;
 
-        
+
         return response()->json([
             'user' => $user,
         ]);
