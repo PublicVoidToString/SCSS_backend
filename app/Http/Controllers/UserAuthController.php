@@ -115,7 +115,7 @@ class UserAuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token, 'role' => $user->role_id,]);
     }
 
     public function me()
