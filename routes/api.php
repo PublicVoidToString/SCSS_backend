@@ -76,4 +76,5 @@ Route::delete('/admin/blacklist/{userId}', [AdministratorController::class, 'rem
 
 Route::get('/offer/list', [OfferController::class, 'index']);
 Route::post('/offer/add', [OfferController::class, 'store']);
+Route::get('/offer/{id}', [OfferController::class, 'show']);
 Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);

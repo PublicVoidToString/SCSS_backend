@@ -14,7 +14,7 @@ class OfferController extends Controller
     {
         // Fetch all offers from the database
         $offers = Offer::all();
-        
+
         // Return the offers, you can return them as JSON or pass them to a view
         return response()->json($offers);
     }
@@ -32,22 +32,22 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
-         // Validate the request data
-    $data = $request->validate([
-        'employer_id' => 'required|integer',  // Assuming 'employers' is the related table
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-    ]);
+        // Validate the request data
+        $data = $request->validate([
+            'employer_id' => 'required|integer',  // Assuming 'employers' is the related table
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
 
-    // Create a new offer
-    $offer = new Offer();
-    $offer->employer_id = $data['employer_id'];
-    $offer->title = $data['title'];
-    $offer->description = $data['description'];
-    $offer->save();
+        // Create a new offer
+        $offer = new Offer();
+        $offer->employer_id = $data['employer_id'];
+        $offer->title = $data['title'];
+        $offer->description = $data['description'];
+        $offer->save();
 
-    // Return the created offer as JSON
-    return response()->json(['data' => $offer]);
+        // Return the created offer as JSON
+        return response()->json(['data' => $offer]);
     }
 
     /**
@@ -55,7 +55,13 @@ class OfferController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Fetch the offer by ID
+        $offer = Offer::find($id);
+        if ($offer) {
+            return response()->json(['data' => $offer]);
+        } else {
+            return response()->json(['error' => 'Offer not found'], 404);
+        }
     }
 
     /**
@@ -73,14 +79,14 @@ class OfferController extends Controller
     {
         $data = $request->validated();
         $offer = Offer::find($id);
-        if($offer != null){
+        if ($offer != null) {
             $offer->employer_id = $data['employer_id'];
             $offer->title = $data['title'];
             $offer->description = $data['description'];
             $offer->save();
-            return response()->json(['data'=>[]]);
+            return response()->json(['data' => []]);
         }
-        return response()->json(['data'=>[]]);
+        return response()->json(['data' => []]);
     }
 
     /**
@@ -89,10 +95,10 @@ class OfferController extends Controller
     public function destroy(string $id)
     {
         $offer = Offer::find($id);
-        if($offer != null){
+        if ($offer != null) {
             $offer->delete();
-            return response()->json(['data'=>$offer]);
-        }else
-        return response()->json(['data'=>[]]);
+            return response()->json(['data' => $offer]);
+        } else
+            return response()->json(['data' => []]);
     }
 }
