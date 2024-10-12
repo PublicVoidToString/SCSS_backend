@@ -12,7 +12,11 @@ class OfferController extends Controller
      */
     public function index()
     {
-        //
+        // Fetch all offers from the database
+        $offers = Offer::all();
+        
+        // Return the offers, you can return them as JSON or pass them to a view
+        return response()->json($offers);
     }
 
     /**
@@ -28,14 +32,22 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validated();
+         // Validate the request data
+    $data = $request->validate([
+        'employer_id' => 'required|integer',  // Assuming 'employers' is the related table
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+    ]);
 
-        $offer = new Offer();
-        $offer->employer_id = $data['employer_id'];
-        $offer->title = $data['title'];
-        $offer->description = $data['description'];
-        $offer->save();
-        return response()->json(['data'=>$offer]);
+    // Create a new offer
+    $offer = new Offer();
+    $offer->employer_id = $data['employer_id'];
+    $offer->title = $data['title'];
+    $offer->description = $data['description'];
+    $offer->save();
+
+    // Return the created offer as JSON
+    return response()->json(['data' => $offer]);
     }
 
     /**

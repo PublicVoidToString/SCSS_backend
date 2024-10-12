@@ -8,6 +8,7 @@ use App\Http\Controllers\CareerOfficeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\AdministratorController;
+use App\Http\Controllers\OfferController;
 
 
 /*
@@ -72,3 +73,7 @@ Route::get('/admin/employers', [EmployerController::class, 'index']);
 Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);
 Route::post('/admin/blacklist/{userId}', [AdministratorController::class, 'addToBlackList']);
 Route::delete('/admin/blacklist/{userId}', [AdministratorController::class, 'removeFromBlackList']);
+
+Route::get('/offer/list', [OfferController::class, 'index']);
+Route::post('/offer/add', [OfferController::class, 'store']);
+Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
