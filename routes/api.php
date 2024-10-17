@@ -8,6 +8,7 @@ use App\Http\Controllers\CareerOfficeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\AdministratorController;
+use App\Http\Controllers\OfferController;
 
 
 /*
@@ -26,6 +27,9 @@ Route::post('/register', [UserAuthController::class, 'register']);
 
 // Route to get logged-in user information, requires authentication
 Route::middleware('auth:api')->get('/user/me', [UserAuthController::class, 'me']);
+Route::get('/offer/list', [OfferController::class, 'index']);
+Route::post('/offer/add', [OfferController::class, 'store']);
+Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::post('/admin/register', [UserAuthController::class, 'registerPrivilegedUser']);
@@ -34,3 +38,4 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::post('/admin/blacklist/{userId}', [AdministratorController::class, 'addToBlackList']);
     Route::delete('/admin/blacklist/{userId}', [AdministratorController::class, 'removeFromBlackList']);
 });
+
