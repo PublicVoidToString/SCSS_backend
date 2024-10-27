@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,5 +19,21 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call([
+        StudentSeeder::class,
+        CompetenceSeeder::class,
+        StudentCompetenceSeeder::class,
+        AdministratorSeeder::class,
+        CareerOfficeSeeder::class,
+        EmployerSeeder::class,
+        CollaborationSeeder::class,
+        OfferSeeder::class,
+        OfferCompetenceSeeder::class,
+        UserSeeder::class,
+        BlacklistSeeder::class,
+        OfferApplicationSeeder::class,
+        AdminUserSeeder::class,
+    ]);
     }
 }

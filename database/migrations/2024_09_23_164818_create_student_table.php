@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('surname')->nullable(); 
             $table->string('indexnumber')->nullable()->unique();
             $table->text('description')->nullable();
-            $table->string('photourl')->nullable();
             $table->timestamps();
         });
     }
