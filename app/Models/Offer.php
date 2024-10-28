@@ -12,7 +12,7 @@ class Offer extends Model
     public const FIELD_TITLE = 'title';
     public const FIELD_DESCRIPTION = 'description';
     public const FIELD_EXPIRATION_DATE = 'expiration_date';
-    public const FIELD_CREATEAD_DATE = 'created_date';
+    public const FIELD_CREATED_DATE = 'created_date';
 
     protected $table = 'offer';
 
@@ -20,6 +20,7 @@ class Offer extends Model
         self::FIELD_EMPLOYER_ID,
         self::FIELD_TITLE,
         self::FIELD_DESCRIPTION,
+        self::FIELD_EXPIRATION_DATE,
     ];
 
     use HasFactory;
