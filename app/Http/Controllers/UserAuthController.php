@@ -14,67 +14,46 @@ class UserAuthController extends Controller
 {
     public function register(Request $request)
     {
-
         // exception handling is managed by Handler.php
-        $this->validate($request, [
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'role_id' => 'required|integer',
-        ]);
+        $this->validateRegistrationRequest($request);
 
         $roleId = $request->role_id;
 
         $dataId = null;
         switch ($roleId) {
             case User::ROLE_STUDENT:
-                $this->validate($request, [
-                    'indexnumber' => 'required|string|unique:student,indexnumber',
-                ]);
-
-                $student = \App\Models\Student::create([
-                    'indexnumber' => $request->indexnumber,
-                ]);
-
+                $student = \App\Models\Student::create([]);
                 $dataId = $student->id;
                 break;
 
             case User::ROLE_EMPLOYER:
-                $this->validate($request, [
-                    'companyname' => 'required|string',
-                    'krsnumber' => 'required|string',
-                    'verified' => 'integer',
-                ]);
-
-                $employer = \App\Models\Employer::create([
-                    'companyname' => $request->companyname,
-                    'krsnumber' => $request->krsnumber,
-                    'verified' => \App\Models\Employer::NOT_VERIFIED,
-                ]);
-
+                $employer = \App\Models\Employer::create([]);
                 $dataId = $employer->id;
                 break;
 
+            default:
+                return response()->json(['error' => 'Invalid role'], 400);
+        }
+
+        return $this->createUser($request, $dataId);
+    }
+
+    public function registerPriviligedUser(Request $request) {
+
+        // exception handling is managed by Handler.php
+        $this->validateRegistrationRequest($request);
+
+        $roleId = $request->role_id;
+
+        $dataId = null;
+        switch ($roleId) {
             case USER::ROLE_ADMINISTRATOR:
-                $this->validate($request, [
-                    'department' => 'required|string',
-                ]);
-
-                $administrator = \App\Models\Administrator::create([
-                    'department' => $request->department,
-                ]);
-
+                $administrator = \App\Models\Administrator::create([]);
                 $dataId = $administrator->id;
                 break;
 
             case USER::ROLE_CAREEROFFICE:
-                $this->validate($request, [
-                    'office_name' => 'required|string',
-                ]);
-
-                $careerOffice = \App\Models\CareerOffice::create([
-                    'office_name' => $request->office_name,
-                ]);
-
+                $careerOffice = \App\Models\CareerOffice::create([]);
                 $dataId = $careerOffice->id;
                 break;
 
@@ -82,6 +61,19 @@ class UserAuthController extends Controller
                 return response()->json(['error' => 'Invalid role'], 400);
         }
 
+        return $this->createUser($request, $dataId);
+    }
+
+    private function validateRegistrationRequest(Request $request) {
+        
+        $this->validate($request, [
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'role_id' => 'required|integer',
+        ]);
+    }
+
+    private function createUser(Request $request, $dataId) {
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make($request->password);

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('employer_id');
             $table->string('title')->nullable(); ;
             $table->text('description')->nullable();
+            $table->dateTime('expiration_date');
             $table->timestamps();
 
             $table->foreign('employer_id')->references('id')->on('employer')->onDelete('cascade');

@@ -37,6 +37,7 @@ class OfferController extends Controller
             'employer_id' => 'required|integer',  // Assuming 'employers' is the related table
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'expiration_date' => 'required|date',
         ]);
 
         // Create a new offer
@@ -44,6 +45,7 @@ class OfferController extends Controller
         $offer->employer_id = $data['employer_id'];
         $offer->title = $data['title'];
         $offer->description = $data['description'];
+        $offer->expiration_date = $data['expiration_date'];
         $offer->save();
 
         // Return the created offer as JSON
@@ -83,6 +85,7 @@ class OfferController extends Controller
             $offer->employer_id = $data['employer_id'];
             $offer->title = $data['title'];
             $offer->description = $data['description'];
+            $offer->expiration_date = $data['expiration_date'];
             $offer->save();
             return response()->json(['data' => []]);
         }
