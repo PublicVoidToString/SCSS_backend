@@ -11,7 +11,8 @@ class Offer extends Model
     public const FIELD_EMPLOYER_ID = 'employer_id';
     public const FIELD_TITLE = 'title';
     public const FIELD_DESCRIPTION = 'description';
-
+    public const FIELD_EXPIRATION_DATE = 'expiration_date';
+    public const FIELD_CREATEAD_DATE = 'created_date';
 
     protected $table = 'offer';
 
