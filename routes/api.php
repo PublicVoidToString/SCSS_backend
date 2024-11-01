@@ -46,6 +46,10 @@ Route::middleware(['auth:api', 'user'])->group(function () {
     Route::patch('/user/{userId}', [UserController::class, 'update']);
 });
 
+Route::middleware(['auth:api', 'employer'])->group(function () {
+    Route::patch('/employer/{employerId}', [EmployerController::class, 'update']);
+});
+
 Route::middleware(['auth:api', 'career_office'])->group(function () {
     Route::patch('/career_office/edit/{careerOfficeId}', [CareerOfficeController::class, 'update']);
 });
