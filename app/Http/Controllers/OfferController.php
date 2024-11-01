@@ -19,6 +19,12 @@ class OfferController extends Controller
         return response()->json($offers);
     }
 
+    public function getOffersByEmployerId($employerId)
+    {
+        $offers = Offer::where('employer_id', $employerId)->get();
+        return response()->json($offers);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
