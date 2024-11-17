@@ -54,13 +54,10 @@ Route::middleware(['auth:api', 'career_office'])->group(function () {
     Route::patch('/career_office/edit/{careerOfficeId}', [CareerOfficeController::class, 'update']);
 });
 
-Route::middleware(['auth:api', 'student'])->group(function () {
-    Route::patch('/student/edit/{studentId}', [StudentController::class, 'update']);
-});
+    Route::patch('/student/edit', [StudentController::class, 'update']);
 
 Route::middleware(['auth:api', 'offer'])->group(function () {
     Route::get('/offer/list/{employerId}', [OfferController::class, 'getOffersByEmployerId']);
-    Route::get('/offer/list', [OfferController::class, 'index']);
 });
 
 Route::middleware(['auth:api', 'education_materials'])->group(function () {

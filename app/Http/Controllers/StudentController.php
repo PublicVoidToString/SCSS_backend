@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -68,20 +69,41 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        $data = $request->validated();
-        $student = Student::find($id);
-        if($student != null){
-            $student->name = $data['name'];
-            $student->surname = $data['surname'];
-            $student->indexnumber = $data['indexnumber'];
-            $student->description = $data['description'];
-            $student->photourl = $data['photourl'];
-            $student->save();
-            return response()->json(['data'=>[]]);
+        // Walidacja danych wejściowych
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'indexnumber' => 'nullable|string|max:50',
+            'description' => 'nullable|string|max:255',
+            'photourl' => 'nullable|string|max:50',
+        ]);
+    
+        // Pobranie obecnie zalogowanego użytkownika
+        $user = Auth::guard('user')->user();
+    
+        // Pobranie ID studenta powiązanego z zalogowanym użytkownikiem
+        $studentId = $user->data_id;
+    
+        // Znalezienie studenta na podstawie ID
+        $student = Student::find($studentId);
+    
+        // Jeśli student nie istnieje, zwróć odpowiedź o błędzie
+        if ($student == null) {
+            return response()->json(['error' => 'Student not found'], 404);
         }
-        return response()->json(['data'=>[]]);
+    
+        // Zaktualizowanie danych studenta
+        $student->update([
+            Student::FIELD_NAME => $data['name'],
+            Student::FIELD_SURNAME => $data['surname'],
+            Student::FIELD_INDEX_NUMBER => $data['indexnumber'],
+            Student::FIELD_DESCRIPTION => $data['description'],
+        ]);
+    
+        // Zwrócenie pozytywnej odpowiedzi po zapisaniu zmian
+        return response()->json(['data' => $student]);
     }
 
     /**
