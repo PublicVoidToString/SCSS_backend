@@ -25,6 +25,20 @@ class OfferController extends Controller
         return response()->json($offers);
     }
 
+    public function getOffersByListOfferIds(array $listOfferIds)
+{
+    // Validate input to ensure it's an array and not empty
+    if (empty($listOfferIds) || !is_array($listOfferIds)) {
+        return response()->json(['error' => 'Invalid or empty list of Offer IDs'], 400);
+    }
+
+    // Retrieve offers where the ID matches any of the given Offer IDs
+    $offers = Offer::whereIn('id', $listOfferIds)->get();
+
+    // Return the offers as a JSON response
+    return response()->json($offers);
+}
+
     /**
      * Show the form for creating a new resource.
      */
