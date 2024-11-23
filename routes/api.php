@@ -10,6 +10,7 @@ use App\Http\Controllers\EducationMaterialsController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\OfferCompetenceController;
 
 
 /*
@@ -31,6 +32,7 @@ Route::middleware('auth:api')->get('/user/me', [UserAuthController::class, 'me']
 Route::get('/offer/list', [OfferController::class, 'index']);
 Route::post('/offer/add', [OfferController::class, 'store']);
 Route::get('/offer/{id}', [OfferController::class, 'show']);
+Route::get('/offer/competence/{competenceId}', [OfferCompetenceController::class, 'getOfferIdsByCompetenceId']);
 Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {

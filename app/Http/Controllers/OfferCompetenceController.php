@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\OfferCompetence;
+use App\Http\Controllers\OfferController;
 
 class OfferCompetenceController extends Controller
 {
@@ -35,6 +36,20 @@ class OfferCompetenceController extends Controller
         $offer_competence->competence_id = $data['competence_id'];
         $offer_competence->save();
         return response()->json(['data'=>$offer_competence]);
+    }
+
+    public function getOfferIdsByCompetenceId($competenceId)
+    {
+        // Get the offer IDs associated with the given competence ID
+        $offerIds = OfferCompetence::where('competence_id', $competenceId)->pluck('offer_id')->toArray(); // Convert to array
+
+        // Create an instance of OfferController
+        $offerController = new OfferController();
+
+        // Call the getOffersByListOfferIds method and pass the offer IDs
+        $offers = $offerController->getOffersByListOfferIds($offerIds);
+
+        return $offers; // $offers is already a JSON response
     }
 
     /**
