@@ -12,7 +12,11 @@ class CompetenceController extends Controller
      */
     public function index()
     {
-        //
+        // Fetch all competences from the database
+        $competences = Competence::all();
+
+        // Return the competences as JSON response
+        return response()->json($competences);
     }
 
     /**
