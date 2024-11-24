@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employer;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth; 
 
 class EmployerController extends Controller
 {
@@ -71,6 +72,7 @@ class EmployerController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    /*
     public function update(Request $request, string $id)
     {
         $data = $request->validated();
@@ -83,6 +85,36 @@ class EmployerController extends Controller
         }
         return response()->json(['data'=>[]]);
     }
+        */
+        public function update(Request $request, string $id)
+{
+    // Pobierz zalogowanego użytkownika
+    $user = Auth::guard('api')->user();
+
+    // Znajdź pracodawcę na podstawie data_id w tabeli users, które wskazuje na id w tabeli employers
+    $employer = Employer::where('id', $id)->where('id', $user->data_id)->first();
+
+    // Sprawdź, czy znaleziono pracodawcę
+    if (!$employer) {
+        return response()->json(['error' => 'Unauthorized or employer not found'], 403);
+    }
+
+    // Walidacja danych
+    $validatedData = $request->validate([
+        'companyname' => 'required|string|max:255',
+        'krsnumber' => 'required|string|max:255',
+    ]);
+
+    // Aktualizacja danych pracodawcy
+    $employer->company_name = $validatedData['companyname'];
+    $employer->krs_number = $validatedData['krsnumber'];
+    $employer->save();
+
+    return response()->json(['message' => 'Employer updated successfully']);
+}
+
+        
+
 
     /**
      * Remove the specified resource from storage.
