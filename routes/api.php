@@ -10,7 +10,9 @@ use App\Http\Controllers\EducationMaterialsController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\OfferCompetenceController;
+
 
 
 /*
@@ -53,6 +55,7 @@ Route::middleware(['auth:api', 'employer'])->group(function () {
     Route::patch('/employer/{employerId}', [EmployerController::class, 'update']);
 });
 
+Route::get('/competence/list', [CompetenceController::class, 'index']);
 
 Route::middleware(['auth:api', 'career_office'])->group(function () {
     Route::patch('/career_office/edit/{careerOfficeId}', [CareerOfficeController::class, 'update']);

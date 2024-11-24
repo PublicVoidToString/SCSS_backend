@@ -71,30 +71,22 @@ class StudentController extends Controller
      */
     public function update(Request $request)
     {
-        // Walidacja danych wejściowych
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
             'indexnumber' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:255',
-            'photourl' => 'nullable|string|max:50',
         ]);
-    
-        // Pobranie obecnie zalogowanego użytkownika
+
         $user = Auth::guard('user')->user();
-    
-        // Pobranie ID studenta powiązanego z zalogowanym użytkownikiem
         $studentId = $user->data_id;
     
-        // Znalezienie studenta na podstawie ID
         $student = Student::find($studentId);
     
-        // Jeśli student nie istnieje, zwróć odpowiedź o błędzie
         if ($student == null) {
             return response()->json(['error' => 'Student not found'], 404);
         }
-    
-        // Zaktualizowanie danych studenta
+
         $student->update([
             Student::FIELD_NAME => $data['name'],
             Student::FIELD_SURNAME => $data['surname'],
@@ -102,7 +94,6 @@ class StudentController extends Controller
             Student::FIELD_DESCRIPTION => $data['description'],
         ]);
     
-        // Zwrócenie pozytywnej odpowiedzi po zapisaniu zmian
         return response()->json(['data' => $student]);
     }
 
