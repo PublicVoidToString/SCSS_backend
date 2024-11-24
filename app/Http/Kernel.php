@@ -17,6 +17,9 @@ class Kernel extends HttpKernel
      protected $routeMiddleware = [
         // Other middleware
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'student' => \App\Http\Middleware\StudentMiddleware::class,
+        'employer' => \App\Http\Middleware\EmployerMiddleware::class,  // Dodane
+        'career_office' => \App\Http\Middleware\CareerOfficeMiddleware::class,
     ];
      
     protected $middleware = [
@@ -45,6 +48,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
