@@ -38,7 +38,7 @@ Route::get('/offer/competence/{competenceId}', [OfferCompetenceController::class
 Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
-    Route::post('/admin/register', [UserAuthController::class, 'registerPrivilegedUser']);
+    Route::post('/admin/register', [UserAuthController::class, 'registerPriviligedUser']);
     Route::get('/admin/employers', [EmployerController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
     Route::patch('/admin/edit/{adminId}', [AdministratorController::class, 'update']);
     Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);
