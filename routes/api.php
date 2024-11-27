@@ -39,15 +39,12 @@ Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::post('/admin/register', [UserAuthController::class, 'registerPrivilegedUser']);
-    Route::get('/admin/employers', [EmployerController::class, 'index']);
+    Route::get('/admin/employers', [EmployerController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
     Route::patch('/admin/edit/{adminId}', [AdministratorController::class, 'update']);
     Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);
     Route::post('/admin/blacklist/{userId}', [AdministratorController::class, 'addToBlackList']);
     Route::delete('/admin/blacklist/{userId}', [AdministratorController::class, 'removeFromBlackList']);
-});
-
-Route::middleware(['auth:api', 'employer'])->group(function () {
-    Route::patch('/employer/{employerId}', [EmployerController::class, 'update']);
+    // dodac listowanie uzytkonikow ktorzy sa na blackliscie
 });
 
 // Done ~Dominik - działa middleware i updatowanie tylko siebie jako employer
@@ -61,11 +58,13 @@ Route::middleware(['auth:api', 'career_office'])->group(function () {
     Route::patch('/career_office/edit/{careerOfficeId}', [CareerOfficeController::class, 'update']);
 });
 
-    Route::patch('/student/edit', [StudentController::class, 'update']);
+Route::patch('/student/edit', [StudentController::class, 'update']);
 
 Route::middleware(['auth:api', 'offer'])->group(function () {
     Route::get('/offer/list/{employerId}', [OfferController::class, 'getOffersByEmployerId']);
 });
+
+// DLA WSZYZTKICH ENDPOINTOW KTORE MAJA DO CZYNIENIA ZE ZWRACANIEM OFERT TRZEBA ZWRACAC ROWNIEZ PRACODAWCE I COMPETENCE DLA TEJ OFERTY (W JEDNYM ENDPOINCIE)
 
 Route::middleware(['auth:api', 'education_materials'])->group(function () {
     Route::get('/education_materials/list', [EducationMaterialsController::class, 'index']);
