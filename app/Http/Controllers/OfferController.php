@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Offer;
+use App\Models\Employer;
+use Illuminate\Support\Facades\Auth;
 
 class OfferController extends Controller
 {
@@ -25,19 +27,33 @@ class OfferController extends Controller
         return response()->json($offers);
     }
 
-    public function getOffersByListOfferIds(array $listOfferIds)
-{
-    // Validate input to ensure it's an array and not empty
-    if (empty($listOfferIds) || !is_array($listOfferIds)) {
-        return response()->json(['error' => 'Invalid or empty list of Offer IDs'], 400);
+    public function getMyOffers(Request $request)
+    {
+        $user = Auth::guard('user')->user();
+        $employerId = $user->data_id;
+    
+        $employer = Employer::find($employerId);
+    
+        if ($employer == null) {
+            return response()->json(['error' => 'Employer not found'], 404);
+        }
+        $offers = Offer::where('employer_id', $employer->id)->get();
+        return response()->json($offers);
     }
 
-    // Retrieve offers where the ID matches any of the given Offer IDs
-    $offers = Offer::whereIn('id', $listOfferIds)->get();
+    public function getOffersByListOfferIds(array $listOfferIds)
+    {
+        // Validate input to ensure it's an array and not empty
+        if (empty($listOfferIds) || !is_array($listOfferIds)) {
+            return response()->json(['error' => 'Invalid or empty list of Offer IDs'], 400);
+        }
 
-    // Return the offers as a JSON response
-    return response()->json($offers);
-}
+        // Retrieve offers where the ID matches any of the given Offer IDs
+        $offers = Offer::whereIn('id', $listOfferIds)->get();
+
+        // Return the offers as a JSON response
+        return response()->json($offers);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -52,9 +68,14 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
+        
+        $user = Auth::guard('user')->user();
+        $employerId = $user->data_id;
+    
+        $employer = Employer::find($employerId);
+
         // Validate the request data
         $data = $request->validate([
-            'employer_id' => 'required|integer',  // Assuming 'employers' is the related table
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'expiration_date' => 'required|date',
@@ -62,7 +83,7 @@ class OfferController extends Controller
 
         // Create a new offer
         $offer = new Offer();
-        $offer->employer_id = $data['employer_id'];
+        $offer->employer_id = $employer->id;
         $offer->title = $data['title'];
         $offer->description = $data['description'];
         $offer->expiration_date = $data['expiration_date'];
@@ -86,6 +107,7 @@ class OfferController extends Controller
         }
     }
 
+    
     /**
      * Show the form for editing the specified resource.
      */
