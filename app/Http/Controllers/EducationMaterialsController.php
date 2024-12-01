@@ -4,105 +4,78 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\EducationMaterials;
-
+use App\Models\User;
 class EducationMaterialsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
-    public function index()
+    public function addEducationMaterial(Request $request)
     {
-        // Fetch all offers from the database
-        $educational_materials = EducationMaterials::all();
+        $request->validate([
+            'description' => 'required|string',
+            'title' => 'required|string|max:255',
+        ]);
 
-        // Return the offers, you can return them as JSON or pass them to a view
-        return response()->json($educational_materials);
+        if (auth()->user()->role_id != User::ROLE_CAREEROFFICE) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $careerOfficeId = auth()->user()->data_id;
+
+        $material = EducationMaterials::create([
+            'career_office_id' => $careerOfficeId,
+            'description' => $request->description,
+            'title' => $request->title,
+        ]);
+
+        return response()->json($material);
     }
 
-    public function listEducationalMaterialsByCareerOfficeId($career_office_id)
+
+    public function listMyMaterials()
     {
-        $educational_materials = EducationMaterials::where('career_office_id', $career_office_id)->get();
-        return response()->json($educational_materials);
+        if (auth()->user()->role_id != User::ROLE_CAREEROFFICE) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $materials = EducationMaterials::where('career_office_id', auth()->user()->data_id)->get();
+
+        return response()->json($materials);
     }
 
-    public function listSingleEducationalMaterial($id)
+    public function listAllMaterials()
     {
-        $educational_material = EducationMaterials::find($id);
-        return response()->json($educational_material);
+        $materials = EducationMaterials::with('careerOffice')->get();
+
+        return response()->json($materials);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function deleteMyMaterial($id)
     {
-        //
-    }
+        if (auth()->user()->role_id != User::ROLE_CAREEROFFICE) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+        $material = EducationMaterials::where('id', $id)
+            ->where('career_office_id', auth()->user()->data_id)
+            ->first();
+
+        if (!$material) {
+            return response()->json(['error' => 'Material not found or unauthorized'], 404);
+        }
+
+        $material->delete();
+
+        return response()->json(['message' => 'Material deleted successfully']);
+    }
+    public function update(Request $request, string $id)
     {
-        // Validate the request data
         $data = $request->validate([
-            'career_office_id' => 'required|integer',  // Assuming 'career_offices' is the related table
+            'title' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
 
-        // Create a new offer
-        $educational_material = new EducationMaterials();
-        $educational_material->career_office_id = $data['career_office_id'];
-        $educational_material->description = $data['description'];
-        $educational_material->save();
+        $material = EducationMaterials::findOrFail($id);
+        $material->update($data);
 
-        // Return the created offer as JSON
-        return response()->json(['data' => $educational_material]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $data = $request->validated();
-        $educational_material = EducationMaterials::find($id);
-        if($educational_material != null){
-            $educational_material->career_office_id = $data['career_office_id'];
-            $educational_material->description = $data['description'];
-            $educational_material->save();
-            return response()->json(['data'=>[]]);
-        }
-        return response()->json(['data'=>[]]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $educational_material = EducationMaterials::find($id);
-        if($educational_material != null){
-            $educational_material->delete();
-            return response()->json(['data'=>$educational_material]);
-        }else
-        return response()->json(['data'=>[]]);
+        return response()->json($material);
     }
 }
