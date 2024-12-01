@@ -38,7 +38,8 @@ class UserAuthController extends Controller
         return $this->createUser($request, $dataId);
     }
 
-    public function registerPriviligedUser(Request $request) {
+    public function registerPriviligedUser(Request $request)
+    {
 
         // exception handling is managed by Handler.php
         $this->validateRegistrationRequest($request);
@@ -47,13 +48,19 @@ class UserAuthController extends Controller
 
         $dataId = null;
         switch ($roleId) {
-            case USER::ROLE_ADMINISTRATOR:
+            case User::ROLE_ADMINISTRATOR:
                 $administrator = \App\Models\Administrator::create([]);
                 $dataId = $administrator->id;
                 break;
 
-            case USER::ROLE_CAREEROFFICE:
-                $careerOffice = \App\Models\CareerOffice::create([]);
+            case User::ROLE_CAREEROFFICE:
+                $this->validate($request, [
+                    'university' => 'required|string|max:255',
+                ]);
+
+                $careerOffice = \App\Models\CareerOffice::create([
+                    'university' => $request->university,
+                ]);
                 $dataId = $careerOffice->id;
                 break;
 
@@ -64,8 +71,9 @@ class UserAuthController extends Controller
         return $this->createUser($request, $dataId);
     }
 
-    private function validateRegistrationRequest(Request $request) {
-        
+    private function validateRegistrationRequest(Request $request)
+    {
+
         $this->validate($request, [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
@@ -73,7 +81,8 @@ class UserAuthController extends Controller
         ]);
     }
 
-    private function createUser(Request $request, $dataId) {
+    private function createUser(Request $request, $dataId)
+    {
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
