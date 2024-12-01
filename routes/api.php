@@ -51,6 +51,7 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
 // Done ~Dominik - działa middleware i updatowanie tylko siebie jako employer
 Route::middleware(['auth:api', 'employer'])->group(function () {
     Route::patch('/employer/{employerId}', [EmployerController::class, 'update']);
+    Route::get('/employer/my_offers', [OfferController::class, 'getMyOffers']);
 });
 
 Route::get('/competence/list', [CompetenceController::class, 'index']);

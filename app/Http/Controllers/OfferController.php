@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Offer;
+use App\Models\Employer;
+use Illuminate\Support\Facades\Auth;
 
 class OfferController extends Controller
 {
@@ -27,6 +29,20 @@ class OfferController extends Controller
             'employer.user',
             'competences'
         ])->where('employer_id', $employerId)->get();
+        return response()->json($offers);
+    }
+
+    public function getMyOffers(Request $request)
+    {
+        $user = Auth::guard('user')->user();
+        $employerId = $user->data_id;
+
+        $employer = Employer::find($employerId);
+
+        if ($employer == null) {
+            return response()->json(['error' => 'Employer not found'], 404);
+        }
+        $offers = Offer::where('employer_id', $employer->id)->get();
         return response()->json($offers);
     }
 
@@ -61,9 +77,14 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
+
+        $user = Auth::guard('user')->user();
+        $employerId = $user->data_id;
+
+        $employer = Employer::find($employerId);
+
         // Validate the request data
         $data = $request->validate([
-            'employer_id' => 'required|integer',  // Assuming 'employers' is the related table
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'expiration_date' => 'required|date',
@@ -71,7 +92,7 @@ class OfferController extends Controller
 
         // Create a new offer
         $offer = new Offer();
-        $offer->employer_id = $data['employer_id'];
+        $offer->employer_id = $employer->id;
         $offer->title = $data['title'];
         $offer->description = $data['description'];
         $offer->expiration_date = $data['expiration_date'];
@@ -98,6 +119,7 @@ class OfferController extends Controller
             return response()->json(['error' => 'Offer not found'], 404);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.
