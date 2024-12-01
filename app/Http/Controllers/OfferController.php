@@ -12,8 +12,10 @@ class OfferController extends Controller
      */
     public function index()
     {
-        // Fetch all offers from the database
-        $offers = Offer::all();
+        $offers = Offer::with([
+            'employer.user',
+            'competences'
+        ])->get();
 
         // Return the offers, you can return them as JSON or pass them to a view
         return response()->json($offers);
@@ -21,23 +23,30 @@ class OfferController extends Controller
 
     public function getOffersByEmployerId($employerId)
     {
-        $offers = Offer::where('employer_id', $employerId)->get();
+        $offers = Offer::with([
+            'employer.user',
+            'competences'
+        ])->where('employer_id', $employerId)->get();
         return response()->json($offers);
     }
 
     public function getOffersByListOfferIds(array $listOfferIds)
-{
-    // Validate input to ensure it's an array and not empty
-    if (empty($listOfferIds) || !is_array($listOfferIds)) {
-        return response()->json(['error' => 'Invalid or empty list of Offer IDs'], 400);
+    {
+        // Validate input to ensure it's an array and not empty
+        if (empty($listOfferIds) || !is_array($listOfferIds)) {
+            return response()->json(['error' => 'Invalid or empty list of Offer IDs'], 400);
+        }
+
+        $offers = Offer::with([
+            'employer.user',
+            'competences'
+        ])
+            ->whereIn('id', $listOfferIds)
+            ->get();
+
+        // Return the offers as a JSON response
+        return response()->json($offers);
     }
-
-    // Retrieve offers where the ID matches any of the given Offer IDs
-    $offers = Offer::whereIn('id', $listOfferIds)->get();
-
-    // Return the offers as a JSON response
-    return response()->json($offers);
-}
 
     /**
      * Show the form for creating a new resource.
@@ -78,9 +87,13 @@ class OfferController extends Controller
     public function show(string $id)
     {
         // Fetch the offer by ID
-        $offer = Offer::find($id);
+        $offer = Offer::with([
+            'employer.user',
+            'competences'
+        ])->find($id);
+
         if ($offer) {
-            return response()->json(['data' => $offer]);
+            return response()->json($offer);
         } else {
             return response()->json(['error' => 'Offer not found'], 404);
         }
