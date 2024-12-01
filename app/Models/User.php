@@ -71,5 +71,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return parent::create($attributes);
     }
-
+    public function blacklist()
+    {
+        return $this->hasOne(BlackList::class, 'user_id', 'id');
+    }
 }

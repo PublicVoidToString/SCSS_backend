@@ -12,7 +12,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::with([
+            'blacklist',
+        ])->get();
+
+        // Return the competences as JSON response
+        return response()->json($users);
     }
 
     /**
@@ -54,15 +59,15 @@ class UserController extends Controller
     {
         $data = $request->validated();
         $user = User::find($id);
-        if($user != null){
+        if ($user != null) {
             $user->email = $data['email'];
             $user->password = $data['password'];
             $user->data_id = $data['data_id'];
             $user->role_id = $data['role_id'];
             $user->save();
-            return response()->json(['data'=>[]]);
+            return response()->json(['data' => []]);
         }
-        return response()->json(['data'=>[]]);
+        return response()->json(['data' => []]);
     }
 
     /**
@@ -71,10 +76,10 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::find($id);
-        if($user != null){
+        if ($user != null) {
             $user->delete();
-            return response()->json(['data'=>$user]);
-        }else
-        return response()->json(['data'=>[]]);
+            return response()->json(['data' => $user]);
+        } else
+            return response()->json(['data' => []]);
     }
 }
