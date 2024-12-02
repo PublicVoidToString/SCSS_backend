@@ -9,11 +9,14 @@ class CareerOffice extends Model
     public const FIELD_ID = 'id';
     public const FIELD_UNIVERSITY = 'university';
 
-    protected $table = 'carrer_office';
+    protected $table = 'career_office';
 
     protected $fillable = [
         self::FIELD_UNIVERSITY
     ];
-
+    public function educationMaterials()
+    {
+        return $this->hasMany(EducationMaterials::class);
+    }
     use HasFactory;
 }

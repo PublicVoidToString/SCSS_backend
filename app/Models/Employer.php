@@ -23,6 +23,10 @@ class Employer extends Model
         self::FIELD_KRS_NUMBER,
         self::FIELD_VERIFIED,
     ];
-
+    public function user()
+    {
+        return $this->hasOne(User::class, 'data_id', 'id')
+            ->where('role_id', User::ROLE_EMPLOYER);
+    }
     use HasFactory;
 }

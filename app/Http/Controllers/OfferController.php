@@ -14,8 +14,10 @@ class OfferController extends Controller
      */
     public function index()
     {
-        // Fetch all offers from the database
-        $offers = Offer::all();
+        $offers = Offer::with([
+            'employer.user',
+            'competences'
+        ])->get();
 
         // Return the offers, you can return them as JSON or pass them to a view
         return response()->json($offers);
@@ -23,7 +25,10 @@ class OfferController extends Controller
 
     public function getOffersByEmployerId($employerId)
     {
-        $offers = Offer::where('employer_id', $employerId)->get();
+        $offers = Offer::with([
+            'employer.user',
+            'competences'
+        ])->where('employer_id', $employerId)->get();
         return response()->json($offers);
     }
 
@@ -31,9 +36,9 @@ class OfferController extends Controller
     {
         $user = Auth::guard('user')->user();
         $employerId = $user->data_id;
-    
+
         $employer = Employer::find($employerId);
-    
+
         if ($employer == null) {
             return response()->json(['error' => 'Employer not found'], 404);
         }
@@ -48,8 +53,12 @@ class OfferController extends Controller
             return response()->json(['error' => 'Invalid or empty list of Offer IDs'], 400);
         }
 
-        // Retrieve offers where the ID matches any of the given Offer IDs
-        $offers = Offer::whereIn('id', $listOfferIds)->get();
+        $offers = Offer::with([
+            'employer.user',
+            'competences'
+        ])
+            ->whereIn('id', $listOfferIds)
+            ->get();
 
         // Return the offers as a JSON response
         return response()->json($offers);
@@ -68,10 +77,10 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $user = Auth::guard('user')->user();
         $employerId = $user->data_id;
-    
+
         $employer = Employer::find($employerId);
 
         // Validate the request data
@@ -99,15 +108,19 @@ class OfferController extends Controller
     public function show(string $id)
     {
         // Fetch the offer by ID
-        $offer = Offer::find($id);
+        $offer = Offer::with([
+            'employer.user',
+            'competences'
+        ])->find($id);
+
         if ($offer) {
-            return response()->json(['data' => $offer]);
+            return response()->json($offer);
         } else {
             return response()->json(['error' => 'Offer not found'], 404);
         }
     }
 
-    
+
     /**
      * Show the form for editing the specified resource.
      */

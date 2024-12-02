@@ -40,6 +40,7 @@ Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::post('/admin/register', [UserAuthController::class, 'registerPriviligedUser']);
     Route::get('/admin/employers', [EmployerController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
+    Route::get('/admin/users', [UserController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
     Route::patch('/admin/edit/{adminId}', [AdministratorController::class, 'update']);
     Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);
     Route::post('/admin/blacklist/{userId}', [AdministratorController::class, 'addToBlackList']);
@@ -67,11 +68,11 @@ Route::middleware(['auth:api', 'offer'])->group(function () {
 
 // DLA WSZYZTKICH ENDPOINTOW KTORE MAJA DO CZYNIENIA ZE ZWRACANIEM OFERT TRZEBA ZWRACAC ROWNIEZ PRACODAWCE I COMPETENCE DLA TEJ OFERTY (W JEDNYM ENDPOINCIE)
 
-Route::middleware(['auth:api', 'education_materials'])->group(function () {
-    Route::get('/education_materials/list', [EducationMaterialsController::class, 'index']);
-    Route::get('/education_materials/list/{careerOfficeId}', [EducationMaterialsController::class, 'listEducationalMaterialsByCareerOfficeId']);
-    Route::get('/education_materials/{id}', [EducationMaterialsController::class, 'listSingleEducationalMaterial']);
-    Route::post('/education_materials/add', [EducationMaterialsController::class, 'store']);
-    Route::patch('/education_materials/edit/{educationMaterialId}', [EducationMaterialsController::class, 'update']);
-    Route::delete('/education_materials/delete/{educationMaterialId}', [EducationMaterialsController::class, 'destroy']);
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('/education_materials/add', [EducationMaterialsController::class, 'addEducationMaterial']);
+    Route::get('/education_materials/my', [EducationMaterialsController::class, 'listMyMaterials']);
+    Route::get('/education_materials/all', [EducationMaterialsController::class, 'listAllMaterials']);
+    Route::get('/education_materials/{id}', [EducationMaterialsController::class, 'getById']);
+    Route::delete('/education_materials/delete/{id}', [EducationMaterialsController::class, 'deleteMyMaterial']);
+    Route::put('/education_materials/update/{id}', [EducationMaterialsController::class, 'update']);
 });

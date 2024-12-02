@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employer;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 class EmployerController extends Controller
 {
@@ -15,7 +15,11 @@ class EmployerController extends Controller
     public function index()
     {
         // Pobieranie tylko niezweryfikowanych pracodawców
-        $unverifiedEmployers = Employer::where('verified', Employer::NOT_VERIFIED)->get();
+        $unverifiedEmployers = Employer::with('user')
+            ->where('verified', Employer::NOT_VERIFIED)
+            ->orWhereNull('verified')
+            ->whereDoesntHave('user.blacklist')
+            ->get();
 
         // Zwracanie danych w formacie JSON
         return response()->json(['data' => $unverifiedEmployers], 200);
@@ -86,34 +90,34 @@ class EmployerController extends Controller
         return response()->json(['data'=>[]]);
     }
         */
-        public function update(Request $request, string $id)
-{
-    // Pobierz zalogowanego użytkownika
-    $user = Auth::guard('api')->user();
+    public function update(Request $request, string $id)
+    {
+        // Pobierz zalogowanego użytkownika
+        $user = Auth::guard('api')->user();
 
-    // Znajdź pracodawcę na podstawie data_id w tabeli users, które wskazuje na id w tabeli employers
-    $employer = Employer::where('id', $id)->where('id', $user->data_id)->first();
+        // Znajdź pracodawcę na podstawie data_id w tabeli users, które wskazuje na id w tabeli employers
+        $employer = Employer::where('id', $id)->where('id', $user->data_id)->first();
 
-    // Sprawdź, czy znaleziono pracodawcę
-    if (!$employer) {
-        return response()->json(['error' => 'Unauthorized or employer not found'], 403);
+        // Sprawdź, czy znaleziono pracodawcę
+        if (!$employer) {
+            return response()->json(['error' => 'Unauthorized or employer not found'], 403);
+        }
+
+        // Walidacja danych
+        $validatedData = $request->validate([
+            'companyname' => 'required|string|max:255',
+            'krsnumber' => 'required|string|max:255',
+        ]);
+
+        // Aktualizacja danych pracodawcy
+        $employer->company_name = $validatedData['companyname'];
+        $employer->krs_number = $validatedData['krsnumber'];
+        $employer->save();
+
+        return response()->json(['message' => 'Employer updated successfully']);
     }
 
-    // Walidacja danych
-    $validatedData = $request->validate([
-        'companyname' => 'required|string|max:255',
-        'krsnumber' => 'required|string|max:255',
-    ]);
 
-    // Aktualizacja danych pracodawcy
-    $employer->company_name = $validatedData['companyname'];
-    $employer->krs_number = $validatedData['krsnumber'];
-    $employer->save();
-
-    return response()->json(['message' => 'Employer updated successfully']);
-}
-
-        
 
 
     /**
@@ -122,10 +126,10 @@ class EmployerController extends Controller
     public function destroy(string $id)
     {
         $employer = employer::find($id);
-        if($employer != null){
+        if ($employer != null) {
             $employer->delete();
-            return response()->json(['data'=>$employer]);
-        }else
-        return response()->json(['data'=>[]]);
+            return response()->json(['data' => $employer]);
+        } else
+            return response()->json(['data' => []]);
     }
 }
