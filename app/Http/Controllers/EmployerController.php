@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employer;
+use App\Models\Application;
+use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -131,5 +133,39 @@ class EmployerController extends Controller
             return response()->json(['data' => $employer]);
         } else
             return response()->json(['data' => []]);
+    }
+
+    public function getApplicationsByEmployer(Request $request, $employerId)
+    {
+        // Validate the employer_id (you could replace this with any dynamic or auth-based check if needed)
+        
+
+        // Get all offers for the given employer_id
+        $offers = Offer::where('employer_id', $employerId)->get();
+
+        // Fetch all applications for those offers
+        $applications = Application::whereIn('offer_id', $offers->pluck('id'))->get();
+
+        return response()->json([
+            'applications' => $applications
+        ]);
+    }
+
+    // Method to get all applications for a specific offer based on offer_id
+    public function getApplicationsByOffer(Request $request, $offerId)
+    {
+        // Validate that the offer exists
+        $offer = Offer::find($offerId);
+
+        if (!$offer) {
+            return response()->json(['error' => 'Offer not found'], 404);
+        }
+
+        // Fetch all applications for the given offer_id
+        $applications = Application::where('offer_id', $offerId)->get();
+
+        return response()->json([
+            'applications' => $applications
+        ]);
     }
 }

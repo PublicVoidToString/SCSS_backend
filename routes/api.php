@@ -12,6 +12,7 @@ use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\OfferCompetenceController;
+use App\Http\Controllers\ApplicationController;
 
 
 
@@ -52,6 +53,8 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
 Route::middleware(['auth:api', 'employer'])->group(function () {
     Route::patch('/employer/{employerId}', [EmployerController::class, 'update']);
     Route::get('/employer/my_offers', [OfferController::class, 'getMyOffers']);
+    Route::get('/employer/my_applications/{employerId}', [EmployerController::class, 'getApplicationsByEmployer']);
+    Route::get('/employer/my_applications_offer/{offerId}', [EmployerController::class, 'getApplicationsByOffer']);
 });
 
 Route::get('/competence/list', [CompetenceController::class, 'index']);
@@ -61,6 +64,7 @@ Route::middleware(['auth:api', 'career_office'])->group(function () {
 });
 
 Route::patch('/student/edit', [StudentController::class, 'update']);
+Route::post('/apply', [ApplicationController::class, 'store']);
 
 Route::middleware(['auth:api', 'offer'])->group(function () {
     Route::get('/offer/list/{employerId}', [OfferController::class, 'getOffersByEmployerId']);
