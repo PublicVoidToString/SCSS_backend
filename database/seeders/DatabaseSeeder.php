@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
         StudentSeeder::class,
-        CompetenceSeeder::class,
         CareerOfficeSeeder::class,
         EmployerSeeder::class,
         AdminUserSeeder::class,
+        ApplicationSeeder::class
     ]);
     }
 }

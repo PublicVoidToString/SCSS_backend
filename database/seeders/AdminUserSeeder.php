@@ -18,7 +18,7 @@ class AdminUserSeeder extends Seeder
                 
         $user = new User();
         $user->email = "admin@admin.com";
-        $user->password = Hash::make("admin123");
+        $user->password = Hash::make("password123");
         $user->role_id = User::ROLE_ADMINISTRATOR;
         $user->data_id = $administratorData->id;
         
