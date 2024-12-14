@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Student;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class StudentSeeder extends Seeder
 {
@@ -13,11 +14,23 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        DB::table('student')->insert([
+        // Define the students
+        $students = [
             ['name' => 'Jan', 'surname' => 'Kowalski', 'indexnumber' => '12345', 'description' => 'Opis studenta 1'],
             ['name' => 'Anna', 'surname' => 'Nowak', 'indexnumber' => '67890', 'description' => 'Opis studenta 2'],
             ['name' => 'Piotr', 'surname' => 'Wiśniewski', 'indexnumber' => '11223', 'description' => 'Opis studenta 3']
-        ]);
+        ];
+
+        foreach ($students as $studentData) {
+            $student = Student::create($studentData);
+
+            // Create a User for the Career Office
+            $user = new User();
+            $user->email = strtolower($studentData['name'] . '@student.com');
+            $user->password = Hash::make('password123');
+            $user->role_id = User::ROLE_STUDENT;
+            $user->data_id = $student->id;
+            $user->save();
+        }
     }
 }
