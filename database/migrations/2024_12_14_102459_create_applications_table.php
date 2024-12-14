@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(); // Primary key
             $table->unsignedBigInteger('student_id'); // Foreign key for student
             $table->unsignedBigInteger('offer_id'); // Foreign key for offer
+            $table->string('status')->default('do rozpatrzenia'); // Column to store application status
             $table->string('cv')->nullable(); // Column to store CV file path
             $table->timestamps(); // Created and updated timestamps
 

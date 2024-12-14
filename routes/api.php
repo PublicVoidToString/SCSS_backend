@@ -54,9 +54,10 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
 Route::middleware(['auth:api', 'employer'])->group(function () {
     Route::patch('/employer/{employerId}', [EmployerController::class, 'update']);
     Route::get('/employer/my_offers', [OfferController::class, 'getMyOffers']);
-    Route::get('/employer/my_applications/{employerId}', [EmployerController::class, 'getApplicationsByEmployer']);
-    Route::get('/employer/my_applications_offer/{offerId}', [EmployerController::class, 'getApplicationsByOffer']);
 });
+Route::get('/employer/my_applications/{offerId}', [EmployerController::class, 'getApplicationsByOffer']);
+Route::post('/employer/accept_application/{applicationId}', [EmployerController::class, 'acceptApplication']);
+Route::post('/employer/reject_application/{applicationId}', [EmployerController::class, 'rejectApplication']);
 
 Route::get('/competence/list', [CompetenceController::class, 'index']);
 
@@ -65,6 +66,7 @@ Route::middleware(['auth:api', 'career_office'])->group(function () {
 });
 
 Route::patch('/student/edit', [StudentController::class, 'update']);
+Route::get('/student/my_applications/{studentId}', [StudentController::class, 'getApplicationsByStudent']);
 Route::post('/apply', [ApplicationController::class, 'store']);
 
 Route::middleware(['auth:api', 'offer'])->group(function () {

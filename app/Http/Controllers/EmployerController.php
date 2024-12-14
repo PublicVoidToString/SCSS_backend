@@ -135,37 +135,57 @@ class EmployerController extends Controller
             return response()->json(['data' => []]);
     }
 
-    public function getApplicationsByEmployer(Request $request, $employerId)
+    public function acceptApplication(Request $request, $applicationId)
     {
-        // Validate the employer_id (you could replace this with any dynamic or auth-based check if needed)
-        
+        // Fetch the application by ID
+        $application = Application::find($applicationId);
 
-        // Get all offers for the given employer_id
-        $offers = Offer::where('employer_id', $employerId)->get();
-
-        // Fetch all applications for those offers
-        $applications = Application::whereIn('offer_id', $offers->pluck('id'))->get();
-
-        return response()->json([
-            'applications' => $applications
-        ]);
-    }
-
-    // Method to get all applications for a specific offer based on offer_id
-    public function getApplicationsByOffer(Request $request, $offerId)
-    {
-        // Validate that the offer exists
-        $offer = Offer::find($offerId);
-
-        if (!$offer) {
-            return response()->json(['error' => 'Offer not found'], 404);
+        // Check if the application exists
+        if (!$application) {
+            return response()->json(['error' => 'Application not found'], 404);
         }
 
-        // Fetch all applications for the given offer_id
-        $applications = Application::where('offer_id', $offerId)->get();
+        // Update the application status to accepted
+        $application->status = 'accepeted';
+        $application->save();
 
-        return response()->json([
-            'applications' => $applications
-        ]);
+        return response()->json(['message' => 'Application accepted successfully']);
     }
+
+    public function rejectApplication(Request $request, $applicationId)
+    {
+        // Fetch the application by ID
+        $application = Application::find($applicationId);
+
+        // Check if the application exists
+        if (!$application) {
+            return response()->json(['error' => 'Application not found'], 404);
+        }
+
+        // Update the application status to rejected
+        $application->status = 'rejected';
+        $application->save();
+
+        return response()->json(['message' => 'Application rejected successfully']);
+    }
+
+    public function getApplicationsByOffer(Request $request, $offerId)
+{
+    // First, check if the offer exists for the given employer
+    $offer = Offer::where('id', $offerId)
+                  ->first();
+
+    if (!$offer) {
+        return response()->json(['error' => 'offer does not exist'], 404);
+    }
+
+    // Fetch all applications for the given offer_id
+    $applications = Application::where('offer_id', $offerId)
+                               ->with('student') // Eager load the student relationship
+                               ->get();
+
+    return response()->json([
+        'applications' => $applications
+    ]);
+}
 }
