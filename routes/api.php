@@ -28,6 +28,14 @@ use App\Http\Controllers\QuizResultController;
 |
 */
 
+Route::middleware(['auth:api', 'student'])->group(function () {
+    Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
+    Route::get('/quiz/results/career-path/{student_id}', [QuizResultController::class, 'getCareerPathResultsForStudent']);
+});
+
+//Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
+//Route::get('/quiz/results/career-path/{student_id}', [QuizResultController::class, 'getCareerPathResultsForStudent']);
+
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
 
