@@ -12,6 +12,7 @@ use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\OfferCompetenceController;
+use App\Http\Controllers\QuizResultController;
 
 
 
@@ -25,6 +26,14 @@ use App\Http\Controllers\OfferCompetenceController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::middleware(['auth:api', 'student'])->group(function () {
+    Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
+    Route::get('/quiz/results/career-path/{student_id}', [QuizResultController::class, 'getCareerPathResultsForStudent']);
+});
+
+//Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
+//Route::get('/quiz/results/career-path/{student_id}', [QuizResultController::class, 'getCareerPathResultsForStudent']);
 
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
