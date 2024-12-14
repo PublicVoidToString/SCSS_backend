@@ -27,7 +27,10 @@ class UserAuthController extends Controller
                 break;
 
             case User::ROLE_EMPLOYER:
-                $employer = \App\Models\Employer::create([]);
+                $employer = \App\Models\Employer::create([
+                    'krsnumber' => $request->krsnumber,
+                    'companyname' => $request->companyname,
+                ]);
                 $dataId = $employer->id;
                 break;
 

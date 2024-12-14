@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('employer', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name')->nullable(); ;
-            $table->string('krs_number')->nullable(); ;
-            $table->string('verified')->nullable(); ;
+            $table->string('companyname')->nullable();
+            $table->string('krsnumber')->nullable();
+            $table->string('verified')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
