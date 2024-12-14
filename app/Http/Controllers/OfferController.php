@@ -17,7 +17,9 @@ class OfferController extends Controller
         $offers = Offer::with([
             'employer.user',
             'competences'
-        ])->get();
+        ])
+        ->whereDoesntHave('employer.user.blacklist')
+        ->get();
 
         // Return the offers, you can return them as JSON or pass them to a view
         return response()->json($offers);

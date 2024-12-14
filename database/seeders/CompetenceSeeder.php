@@ -15,9 +15,14 @@ class CompetenceSeeder extends Seeder
     {
         
         DB::table('competence')->insert([
-            ['name' => 'JAVA', 'description' => 'Doświadczenie w pracu z JAVĄ'],
-            ['name' => 'C++', 'description' => 'Doświadczenie w pracu z C++'],
-            ['name' => 'PHP', 'description' => 'Doświadczenie w pracu z PHP']
+            ['name' => 'FRONTEND', 'description' => 'Znajomość pracy na frontendzie aplikacji'],
+            ['name' => 'BACKEND', 'description' => 'Umiejętność pracy na backendzie aplikacji'],
+            ['name' => 'DEVOPS', 'description' => 'Umiejętności devops'],
+            ['name' => 'DATA SCIENCE', 'description' => 'Umiejętności pracy na big data'],
+            ['name' => 'CYBER SECURITY', 'description' => 'Umiejętności cyber security'],
+            ['name' => 'JAVA', 'description' => 'Umiejętność pracy z JAVĄ'],
+            ['name' => 'C++', 'description' => 'Umiejętność pracy z C++'],
+            ['name' => 'PHP', 'description' => 'Umiejętność pracy z PHP']
         ]);
     }
 }

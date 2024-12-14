@@ -23,16 +23,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
         StudentSeeder::class,
         CompetenceSeeder::class,
-        StudentCompetenceSeeder::class,
-        AdministratorSeeder::class,
         CareerOfficeSeeder::class,
         EmployerSeeder::class,
-        CollaborationSeeder::class,
-        OfferSeeder::class,
-        OfferCompetenceSeeder::class,
-        UserSeeder::class,
-        BlacklistSeeder::class,
-        OfferApplicationSeeder::class,
         AdminUserSeeder::class,
     ]);
     }

@@ -82,8 +82,8 @@ class EmployerController extends Controller
         $data = $request->validated();
         $employer = employer::find($id);
         if($employer != null){
-            $employer->company_name = $data['companyname'];
-            $employer->krs_number = $data['krsnumber'];
+            $employer->companyname = $data['companyname'];
+            $employer->krsnumber = $data['krsnumber'];
             $employer->save();
             return response()->json(['data'=>[]]);
         }
@@ -110,8 +110,8 @@ class EmployerController extends Controller
         ]);
 
         // Aktualizacja danych pracodawcy
-        $employer->company_name = $validatedData['companyname'];
-        $employer->krs_number = $validatedData['krsnumber'];
+        $employer->companyname = $validatedData['companyname'];
+        $employer->krsnumber = $validatedData['krsnumber'];
         $employer->save();
 
         return response()->json(['message' => 'Employer updated successfully']);
