@@ -13,6 +13,7 @@ use App\Http\Controllers\OfferController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\OfferCompetenceController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\QuizResultController;
 
 
 
