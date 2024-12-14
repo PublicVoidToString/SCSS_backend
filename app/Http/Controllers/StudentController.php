@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\Application;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\QuizResult;
@@ -50,6 +51,22 @@ class StudentController extends Controller
 
         return response()->json(['data' => $student], 201);
     }
+
+    public function getApplicationsByStudent(Request $request, $studentId)
+{
+    // First, fetch all applications for the given student_id
+    $applications = Application::where('student_id', $studentId)
+                               ->with('offer') // Eager load the offer relationship
+                               ->get();
+
+    if ($applications->isEmpty()) {
+        return response()->json(['error' => 'No applications found for this student'], 404);
+    }
+
+    return response()->json([
+        'applications' => $applications
+    ]);
+}
 
     /**
      * Display the specified resource.

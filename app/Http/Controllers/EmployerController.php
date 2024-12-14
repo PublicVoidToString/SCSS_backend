@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employer;
+use App\Models\Application;
+use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -132,4 +134,58 @@ class EmployerController extends Controller
         } else
             return response()->json(['data' => []]);
     }
+
+    public function acceptApplication(Request $request, $applicationId)
+    {
+        // Fetch the application by ID
+        $application = Application::find($applicationId);
+
+        // Check if the application exists
+        if (!$application) {
+            return response()->json(['error' => 'Application not found'], 404);
+        }
+
+        // Update the application status to accepted
+        $application->status = 'accepeted';
+        $application->save();
+
+        return response()->json(['message' => 'Application accepted successfully']);
+    }
+
+    public function rejectApplication(Request $request, $applicationId)
+    {
+        // Fetch the application by ID
+        $application = Application::find($applicationId);
+
+        // Check if the application exists
+        if (!$application) {
+            return response()->json(['error' => 'Application not found'], 404);
+        }
+
+        // Update the application status to rejected
+        $application->status = 'rejected';
+        $application->save();
+
+        return response()->json(['message' => 'Application rejected successfully']);
+    }
+
+    public function getApplicationsByOffer(Request $request, $offerId)
+{
+    // First, check if the offer exists for the given employer
+    $offer = Offer::where('id', $offerId)
+                  ->first();
+
+    if (!$offer) {
+        return response()->json(['error' => 'offer does not exist'], 404);
+    }
+
+    // Fetch all applications for the given offer_id
+    $applications = Application::where('offer_id', $offerId)
+                               ->with('student') // Eager load the student relationship
+                               ->get();
+
+    return response()->json([
+        'applications' => $applications
+    ]);
+}
 }

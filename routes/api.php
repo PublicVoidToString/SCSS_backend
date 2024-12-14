@@ -12,6 +12,7 @@ use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\CompetenceController;
 use App\Http\Controllers\OfferCompetenceController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\QuizResultController;
 
 
@@ -62,6 +63,9 @@ Route::middleware(['auth:api', 'employer'])->group(function () {
     Route::patch('/employer/{employerId}', [EmployerController::class, 'update']);
     Route::get('/employer/my_offers', [OfferController::class, 'getMyOffers']);
 });
+Route::get('/employer/my_applications/{offerId}', [EmployerController::class, 'getApplicationsByOffer']);
+Route::post('/employer/accept_application/{applicationId}', [EmployerController::class, 'acceptApplication']);
+Route::post('/employer/reject_application/{applicationId}', [EmployerController::class, 'rejectApplication']);
 
 Route::get('/competence/list', [CompetenceController::class, 'index']);
 
@@ -70,6 +74,8 @@ Route::middleware(['auth:api', 'career_office'])->group(function () {
 });
 
 Route::patch('/student/edit', [StudentController::class, 'update']);
+Route::get('/student/my_applications/{studentId}', [StudentController::class, 'getApplicationsByStudent']);
+Route::post('/apply', [ApplicationController::class, 'store']);
 
 Route::middleware(['auth:api', 'offer'])->group(function () {
     Route::get('/offer/list/{employerId}', [OfferController::class, 'getOffersByEmployerId']);
