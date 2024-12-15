@@ -90,6 +90,7 @@ class OfferController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'expiration_date' => 'required|date',
+            'type' => 'required|exists:offer_type,id',
         ]);
 
         // Create a new offer
@@ -98,6 +99,7 @@ class OfferController extends Controller
         $offer->title = $data['title'];
         $offer->description = $data['description'];
         $offer->expiration_date = $data['expiration_date'];
+        $offer->offer_type_id =  $data['type'];
         $offer->save();
 
         // Return the created offer as JSON
@@ -143,6 +145,7 @@ class OfferController extends Controller
             $offer->title = $data['title'];
             $offer->description = $data['description'];
             $offer->expiration_date = $data['expiration_date'];
+            $offer->offer_type_id = $data['type'];
             $offer->save();
             return response()->json(['data' => []]);
         }
@@ -160,5 +163,14 @@ class OfferController extends Controller
             return response()->json(['data' => $offer]);
         } else
             return response()->json(['data' => []]);
+    }
+
+    public function getOfferTypes()
+    {
+        // Pobierz wszystkie typy ofert
+        $offerTypes = \App\Models\OfferType::all();
+
+        // Zwróć wyniki jako JSON
+        return response()->json(['data' => $offerTypes]);
     }
 }

@@ -39,6 +39,9 @@ Route::middleware(['auth:api', 'student'])->group(function () {
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/register', [UserAuthController::class, 'register']);
 
+//Wyświetlanie typów ofert
+Route::get('/offer/types', [OfferController::class, 'getOfferTypes']);
+
 // Route to get logged-in user information, requires authentication
 Route::middleware('auth:api')->get('/user/me', [UserAuthController::class, 'me']);
 Route::get('/offer/list', [OfferController::class, 'index']);

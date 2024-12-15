@@ -17,9 +17,11 @@ return new class extends Migration
             $table->string('title')->nullable(); ;
             $table->text('description')->nullable();
             $table->dateTime('expiration_date');
+            $table->unsignedBigInteger('offer_type_id');
             $table->timestamps();
 
             $table->foreign('employer_id')->references('id')->on('employer')->onDelete('cascade');
+            $table->foreign('offer_type_id')->references('id')->on('offer_type')->onDelete('cascade');
         });
     }
 

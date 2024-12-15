@@ -51,7 +51,8 @@ class EmployerSeeder extends Seeder
                 'employer_id' => $employer->id,
                 'title' => "Okazja pracy w " . $employerData['companyname'],
                 'description' => "Join " . $employerData['companyname'] . " for an exciting career!",
-                'expiration_date' => now()->addMonths(3)
+                'expiration_date' => now()->addMonths(3),
+                'offer_type_id' => '1'
             ]);
 
             $programmingSkills = [6, 7, 8]; // id dla języków programowania 'JAVA', 'C++', 'PHP'
