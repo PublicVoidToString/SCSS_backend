@@ -16,6 +16,7 @@ class OfferController extends Controller
     {
         $offers = Offer::with([
             'employer.user',
+            'offerType',
             'competences'
         ])
         ->whereDoesntHave('employer.user.blacklist')
@@ -29,6 +30,7 @@ class OfferController extends Controller
     {
         $offers = Offer::with([
             'employer.user',
+            'offerType',
             'competences'
         ])->where('employer_id', $employerId)->get();
         return response()->json($offers);
@@ -57,6 +59,7 @@ class OfferController extends Controller
 
         $offers = Offer::with([
             'employer.user',
+            'offerType',
             'competences'
         ])
             ->whereIn('id', $listOfferIds)
@@ -114,6 +117,7 @@ class OfferController extends Controller
         // Fetch the offer by ID
         $offer = Offer::with([
             'employer.user',
+            'offerType',
             'competences'
         ])->find($id);
 
@@ -171,6 +175,46 @@ class OfferController extends Controller
         $offerTypes = \App\Models\OfferType::all();
 
         // Zwróć wyniki jako JSON
-        return response()->json(['data' => $offerTypes]);
+        return response()->json($offerTypes);
     }
+
+    public function getOfferIdsByTypeId($typeId)
+    {
+        // Pobierz oferty bezpośrednio z modelu, filtrując po offer_type_id
+        $offers = Offer::where('offer_type_id', $typeId)
+            ->with(['competences', 'offerType', 'employer']) // Opcjonalnie dołącz relacje
+            ->get();
+    
+        return response()->json($offers); // Zwraca dane w formacie JSON
+    }
+
+
+    public function getOfferIdsByFilter(Request $request)
+    {
+        // Pobierz dane z requestu
+        $type = $request->input('type');
+        $competences = $request->input('competence');
+
+        // Budujemy zapytanie
+        $query = Offer::query();
+
+        // Jeżeli "type" nie jest puste, filtrujemy po offer_type_id
+        if ($type) {
+            $query->where('offer_type_id', $type);
+        }
+
+        // Jeżeli "competence" nie jest puste, filtrujemy po powiązanych kompetencjach
+        if ($competences && count($competences) > 0) {
+            $query->whereHas('competences', function($q) use ($competences) {
+                $q->whereIn('competence_id', $competences);
+            });
+        }
+
+        // Wykonaj zapytanie
+        $offers = $query->with(['competences', 'offertype', 'employer'])->get();
+
+        // Zwróć oferty w formacie JSON
+        return response()->json($offers);
+    }
+
 }

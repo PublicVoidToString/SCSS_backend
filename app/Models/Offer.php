@@ -32,6 +32,11 @@ class Offer extends Model
         return $this->belongsTo(Employer::class, self::FIELD_EMPLOYER_ID);
     }
 
+    public function offerType()
+    {
+        return $this->belongsTo(OfferType::class, self::FIELD_OFFER_TYPE_ID);
+    }
+
     public function competences()
     {
         return $this->belongsToMany(
@@ -40,10 +45,5 @@ class Offer extends Model
             'offer_id',
             'competence_id'
         );
-    }
-
-    public function offerType()
-    {
-        return $this->belongsTo(OfferType::class, self::FIELD_OFFER_TYPE_ID);
     }
 }

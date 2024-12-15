@@ -48,6 +48,8 @@ Route::get('/offer/list', [OfferController::class, 'index']);
 Route::post('/offer/add', [OfferController::class, 'store']);
 Route::get('/offer/{id}', [OfferController::class, 'show']);
 Route::get('/offer/competence/{competenceId}', [OfferCompetenceController::class, 'getOfferIdsByCompetenceId']);
+Route::get('/offer/type/{typeId}', [OfferController::class, 'getOfferIdsByTypeId']);
+Route::get('/offers/filtered', [OfferController::class, 'getOfferIdsByFilter']);
 Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
