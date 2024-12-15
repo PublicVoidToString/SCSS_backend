@@ -92,13 +92,21 @@ class EmployerController extends Controller
         return response()->json(['data'=>[]]);
     }
         */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
         // Pobierz zalogowanego użytkownika
         $user = Auth::guard('api')->user();
 
+       
+        $employerId = $user->data_id;
+    
+        $employer = Employer::find($employerId);
+    
+        if ($employer == null) {
+            return response()->json(['error' => 'Employer not found'], 404);
+        }
         // Znajdź pracodawcę na podstawie data_id w tabeli users, które wskazuje na id w tabeli employers
-        $employer = Employer::where('id', $id)->where('id', $user->data_id)->first();
+        $employer = Employer::where('id', $employerId)->where('id', $user->data_id)->first();
 
         // Sprawdź, czy znaleziono pracodawcę
         if (!$employer) {
@@ -107,13 +115,11 @@ class EmployerController extends Controller
 
         // Walidacja danych
         $validatedData = $request->validate([
-            'companyname' => 'required|string|max:255',
-            'krsnumber' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
         ]);
 
         // Aktualizacja danych pracodawcy
-        $employer->companyname = $validatedData['companyname'];
-        $employer->krsnumber = $validatedData['krsnumber'];
+        $employer->description = $validatedData['description'];
         $employer->save();
 
         return response()->json(['message' => 'Employer updated successfully']);
