@@ -211,7 +211,7 @@ class OfferController extends Controller
         }
 
         // Wykonaj zapytanie
-        $offers = $query->with(['competences', 'offertype', 'employer'])->get();
+        $offers = $query->with(['competences', 'offerType', 'employer'])->get();
 
         // Zwróć oferty w formacie JSON
         return response()->json($offers);
