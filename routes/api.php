@@ -41,6 +41,7 @@ Route::post('/register', [UserAuthController::class, 'register']);
 
 //Wyświetlanie typów ofert
 Route::get('/offer/types', [OfferController::class, 'getOfferTypes']);
+Route::get('/offer/competences', [OfferController::class, 'getOfferCompetences']);
 
 // Route to get logged-in user information, requires authentication
 Route::middleware('auth:api')->get('/user/me', [UserAuthController::class, 'me']);

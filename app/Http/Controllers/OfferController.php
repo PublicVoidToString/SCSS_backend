@@ -178,6 +178,16 @@ class OfferController extends Controller
         return response()->json($offerTypes);
     }
 
+
+    public function getOfferCompetences()
+    {
+        // Pobierz wszystkie typy ofert
+        $offerTypes = \App\Models\Competence::all();
+
+        // Zwróć wyniki jako JSON
+        return response()->json($offerTypes);
+    }
+
     public function getOfferIdsByTypeId($typeId)
     {
         // Pobierz oferty bezpośrednio z modelu, filtrując po offer_type_id
