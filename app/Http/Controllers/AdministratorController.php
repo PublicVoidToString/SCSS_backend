@@ -159,4 +159,48 @@ class AdministratorController extends Controller
         ], 404);
     }
 
+    public function addCompetence(Request $request)
+    {
+        // Validate the incoming request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        // Create a new competence
+        $competence = \App\Models\Competence::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+        ]);
+
+        // Return a success response
+        return response()->json([
+            'message' => 'Competence added successfully.',
+            'competence' => $competence,
+        ], 201);
+    }
+
+    public function deleteCompetence($competenceId)
+    {
+        // Find the competence by ID
+        $competence = \App\Models\Competence::find($competenceId);
+
+        if (!$competence) {
+            return response()->json([
+                'message' => 'Competence not found.',
+            ], 404);
+        }
+
+        // Delete all related OfferCompetence entries
+        \App\Models\OfferCompetence::where('competence_id', $competenceId)->delete();
+
+        // Delete the competence
+        $competence->delete();
+
+        // Return a success response
+        return response()->json([
+            'message' => 'Competence deleted successfully.',
+        ], 200);
+    }
+
 }

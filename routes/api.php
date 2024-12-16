@@ -61,6 +61,8 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);
     Route::post('/admin/blacklist/{userId}', [AdministratorController::class, 'addToBlackList']);
     Route::delete('/admin/blacklist/{userId}', [AdministratorController::class, 'removeFromBlackList']);
+    Route::post('/admin/createcompetence', [AdministratorController::class, 'addCompetence']);
+    Route::delete('/admin/deletecompetences/{competenceId}', [AdministratorController::class, 'deleteCompetence']);
     // dodac listowanie uzytkonikow ktorzy sa na blackliscie
 });
 
