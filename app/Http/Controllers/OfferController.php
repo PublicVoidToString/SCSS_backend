@@ -82,33 +82,44 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
-
         $user = Auth::guard('user')->user();
         $employerId = $user->data_id;
-
+    
         $employer = Employer::find($employerId);
-
+    
         // Validate the request data
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'expiration_date' => 'required|date',
             'type' => 'required|exists:offer_type,id',
+            'competences' => 'required|array', // Sprawdzamy, czy `competences` to tablica
+            'competences.*' => 'exists:competence,id' // Poprawiona walidacja - sprawdzenie tabeli `competence`
         ]);
-
+    
         // Create a new offer
         $offer = new Offer();
         $offer->employer_id = $employer->id;
         $offer->title = $data['title'];
         $offer->description = $data['description'];
         $offer->expiration_date = $data['expiration_date'];
-        $offer->offer_type_id =  $data['type'];
+        $offer->offer_type_id = $data['type'];
         $offer->save();
-
-        // Return the created offer as JSON
-        return response()->json(['data' => $offer]);
+    
+        // Save the offer competencies
+        foreach ($data['competences'] as $competenceId) {
+            \App\Models\OfferCompetence::create([
+                \App\Models\OfferCompetence::FIELD_OFFER_ID => $offer->id,
+                \App\Models\OfferCompetence::FIELD_COMPETENCE_ID => $competenceId,
+            ]);
+        }
+    
+        // Return the created offer with the associated competences
+        return response()->json([
+            'data' => $offer,
+            'competences' => $offer->competences, // Zwrócenie przypisanych kompetencji
+        ]);
     }
-
     /**
      * Display the specified resource.
      */
