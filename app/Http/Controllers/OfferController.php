@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Offer;
 use App\Models\Employer;
+use App\Models\User;
+use App\Models\Application;
 use Illuminate\Support\Facades\Auth;
 
 class OfferController extends Controller
@@ -19,8 +21,8 @@ class OfferController extends Controller
             'offerType',
             'competences'
         ])
-        ->whereDoesntHave('employer.user.blacklist')
-        ->get();
+            ->whereDoesntHave('employer.user.blacklist')
+            ->get();
 
         // Return the offers, you can return them as JSON or pass them to a view
         return response()->json($offers);
@@ -102,7 +104,7 @@ class OfferController extends Controller
         $offer->title = $data['title'];
         $offer->description = $data['description'];
         $offer->expiration_date = $data['expiration_date'];
-        $offer->offer_type_id =  $data['type'];
+        $offer->offer_type_id = $data['type'];
         $offer->save();
 
         // Return the created offer as JSON
@@ -114,6 +116,9 @@ class OfferController extends Controller
      */
     public function show(string $id)
     {
+        // Fetch the currently authenticated user
+        $user = auth()->user();
+
         // Fetch the offer by ID
         $offer = Offer::with([
             'employer.user',
@@ -121,12 +126,25 @@ class OfferController extends Controller
             'competences'
         ])->find($id);
 
-        if ($offer) {
-            return response()->json($offer);
-        } else {
+        if (!$offer) {
             return response()->json(['error' => 'Offer not found'], 404);
         }
+
+        $hasApplied = false;
+        if ($user && $user->role_id === User::ROLE_STUDENT) {
+            $studentId = $user->data_id;
+
+            $hasApplied = Application::where('student_id', $studentId)
+                ->where('offer_id', $offer->id)
+                ->exists();
+        }
+
+        return response()->json([
+            'offer' => $offer,
+            'has_applied' => $hasApplied
+        ]);
     }
+
 
 
     /**
@@ -194,7 +212,7 @@ class OfferController extends Controller
         $offers = Offer::where('offer_type_id', $typeId)
             ->with(['competences', 'offerType', 'employer']) // Opcjonalnie dołącz relacje
             ->get();
-    
+
         return response()->json($offers); // Zwraca dane w formacie JSON
     }
 
@@ -215,7 +233,7 @@ class OfferController extends Controller
 
         // Jeżeli "competence" nie jest puste, filtrujemy po powiązanych kompetencjach
         if ($competences && count($competences) > 0) {
-            $query->whereHas('competences', function($q) use ($competences) {
+            $query->whereHas('competences', function ($q) use ($competences) {
                 $q->whereIn('competence_id', $competences);
             });
         }
