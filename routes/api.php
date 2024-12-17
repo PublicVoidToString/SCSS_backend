@@ -43,7 +43,8 @@ Route::middleware(['auth:api', 'student'])->group(function () {
     Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
     Route::get('/quiz/results/career-path/{student_id}', [QuizResultController::class, 'getCareerPathResultsForStudent']);
     Route::post('/student/apply', [ApplicationController::class, 'store']);
-
+    Route::patch('/student/edit', [StudentController::class, 'update']);
+    Route::get('/student/my_applications/filtered', [StudentController::class, 'getApplicationsByStudentFiltered']);
 });
 
 //Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
@@ -96,9 +97,6 @@ Route::get('/competence/list', [CompetenceController::class, 'index']);
 Route::middleware(['auth:api', 'career_office'])->group(function () {
     Route::patch('/career_office/edit/{careerOfficeId}', [CareerOfficeController::class, 'update']);
 });
-
-Route::patch('/student/edit', [StudentController::class, 'update']);
-Route::get('/student/my_applications/{studentId}', [StudentController::class, 'getApplicationsByStudent']);
 
 Route::middleware(['auth:api', 'offer'])->group(function () {
     Route::get('/offer/list/{employerId}', [OfferController::class, 'getOffersByEmployerId']);

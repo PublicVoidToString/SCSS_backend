@@ -52,21 +52,30 @@ class StudentController extends Controller
         return response()->json(['data' => $student], 201);
     }
 
-    public function getApplicationsByStudent(Request $request, $studentId)
-{
-    // First, fetch all applications for the given student_id
-    $applications = Application::where('student_id', $studentId)
-                               ->with('offer') // Eager load the offer relationship
-                               ->get();
+    public function getApplicationsByStudentFiltered(Request $request)
+    {
+    $user = auth()->user();
 
-    if ($applications->isEmpty()) {
-        return response()->json(['error' => 'No applications found for this student'], 404);
+    $student = Student::find($user->data_id);
+
+    if (!$student) {
+        return response()->json(['error' => 'Student not found'], 404);
     }
+
+    $query = Application::where('student_id', $student->id)
+                        ->with(['offer', 'student']); 
+                        
+    if ($request->has('status') && $request->status !== 'all') {
+        $query->where('status', $request->status);
+    }
+
+    $applications = $query->get();
 
     return response()->json([
         'applications' => $applications
     ]);
-}
+    }
+
 
     /**
      * Display the specified resource.
