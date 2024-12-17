@@ -69,7 +69,7 @@ Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::post('/admin/register', [UserAuthController::class, 'registerPriviligedUser']);
     Route::get('/admin/employers', [EmployerController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
-    Route::get('/admin/users', [UserController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
+    Route::get('/admin/users', action: [UserController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
     Route::patch('/admin/edit/{adminId}', [AdministratorController::class, 'update']);
     Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);
     Route::post('/admin/blacklist/{userId}', [AdministratorController::class, 'addToBlackList']);
@@ -84,6 +84,8 @@ Route::middleware(['auth:api', 'employer'])->group(function () {
     Route::patch('/employer', [EmployerController::class, 'update']);
     Route::get('/employer/my_offers', [OfferController::class, 'getMyOffers']);
     Route::get('/employer/my_applications', [EmployerController::class, 'getApplicationsByEmployer']);
+    Route::get('/employer/my_applications/filtered', [EmployerController::class, 'getApplicationsByEmployerFiltered']);
+
     Route::post('/employer/accept_application/{applicationId}', [EmployerController::class, 'acceptApplication']);
     Route::post('/employer/reject_application/{applicationId}', [EmployerController::class, 'rejectApplication']);
 });

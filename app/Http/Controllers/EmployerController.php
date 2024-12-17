@@ -202,6 +202,33 @@ class EmployerController extends Controller
     ]);
     }
 
+    public function getApplicationsByEmployerFiltered(Request $request)
+    {
+        $user = auth()->user();
+    
+        $employer = Employer::find($user->data_id);
+    
+        $offers = Offer::where('employer_id', $employer->id)->pluck('id');
+    
+        if ($offers->isEmpty()) {
+            return response()->json(['error' => 'Brak ofert'], 404);
+        }
+        
+        $query = Application::whereIn('offer_id', $offers)
+                            ->with(['offer', 'student']); // Include offer and student relationships
+    
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+    
+        $applications = $query->get();
+    
+        return response()->json([
+            'applications' => $applications
+        ]);
+    }
+    
+
 
     public function getApplicationsByOffer(Request $request, $offerId)
     {
