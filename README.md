@@ -1,28 +1,28 @@
 JAK URUCHOMIĆ
 
-// environmental variables
-POSTGRES_PASSWORD postgres // w dockerze w environmental variables
+// environmental variables <br/>
+POSTGRES_PASSWORD postgres // w dockerze w environmental variables <br/>
+<br/><br/>
+// zainstalować composer - mac/linux - komenda, windows - exe<br/>
+// potem w folderze projektowym<br/>
+composer install<br/><br/>
 
-// zainstalować composer - mac/linux - komenda, windows - exe
-// potem w folderze projektowym
-composer install
+// setup - instalacja zależność + migracje (po konfiguracji .env)<br/>
+php artisan migrate<br/><br/>
 
-// setup - instalacja zależność + migracje (po konfiguracji .env)
-php artisan migrate
+//(już powinno pobrać się z composera - tego nie trzeba raczej) composer require tymon/jwt-auth<br/>
+php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"<br/>
+php artisan jwt:secret<br/>
+php artisan key:generate<br/><br/>
 
-//(już powinno pobrać się z composera - tego nie trzeba raczej) composer require tymon/jwt-auth
-php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
-php artisan jwt:secret
-php artisan key:generate
+php artisan storage:link // ustalenie storage<br/>
+php artisan db:seed // uruchomienie seederów<br/>
+php artisan serve // uruchomienie aplikacji<br/><br/>
 
-php artisan storage:link // ustalenie storage
-php artisan db:seed // uruchomienie seederów
-php artisan serve // uruchomienie aplikacji
+// jeśli migracje są złe i trzeba cofnąć: php artisan migrate:rollback<br/><br/>
 
-// jeśli migracje są złe i trzeba cofnąć: php artisan migrate:rollback
-
-// wypisanie ścieżek - użyteczne
-php artisan route:list
+// wypisanie ścieżek - użyteczne<br/><br/>
+php artisan route:list<br/><br/>
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
