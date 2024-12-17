@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\UserController;
@@ -28,9 +29,22 @@ use App\Http\Controllers\QuizResultController;
 |
 */
 
+Route::get('/employer/cvs/{cvFile}', function ($cvFile) {
+    $path = public_path("storage/cvs/{$cvFile}");
+
+    if (file_exists($path)) {
+        return response()->download($path);
+    } else {
+        return response()->json(['error' => 'File not found'], 404);
+    }
+});
+
 Route::middleware(['auth:api', 'student'])->group(function () {
     Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
     Route::get('/quiz/results/career-path/{student_id}', [QuizResultController::class, 'getCareerPathResultsForStudent']);
+    Route::post('/student/apply', [ApplicationController::class, 'store']);
+    Route::patch('/student/edit', [StudentController::class, 'update']);
+    Route::get('/student/my_applications/filtered', [StudentController::class, 'getApplicationsByStudentFiltered']);
 });
 
 //Route::post('/quiz/results', [QuizResultController::class, 'storeQuizResults']);
@@ -56,7 +70,7 @@ Route::delete('/offer/delete/{offerId}', [OfferController::class, 'destroy']);
 Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::post('/admin/register', [UserAuthController::class, 'registerPriviligedUser']);
     Route::get('/admin/employers', [EmployerController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
-    Route::get('/admin/users', [UserController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
+    Route::get('/admin/users', action: [UserController::class, 'index']); // Trzeba zmienic dodawanie tak zeby korzystal z 'store'
     Route::patch('/admin/edit/{adminId}', [AdministratorController::class, 'update']);
     Route::patch('/admin/employers/{employerId}', [AdministratorController::class, 'verifyEmployer']);
     Route::post('/admin/blacklist/{userId}', [AdministratorController::class, 'addToBlackList']);
@@ -70,20 +84,19 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
 Route::middleware(['auth:api', 'employer'])->group(function () {
     Route::patch('/employer', [EmployerController::class, 'update']);
     Route::get('/employer/my_offers', [OfferController::class, 'getMyOffers']);
+    Route::get('/employer/my_applications', [EmployerController::class, 'getApplicationsByEmployer']);
+    Route::get('/employer/my_applications/filtered', [EmployerController::class, 'getApplicationsByEmployerFiltered']);
+
+    Route::post('/employer/accept_application/{applicationId}', [EmployerController::class, 'acceptApplication']);
+    Route::post('/employer/reject_application/{applicationId}', [EmployerController::class, 'rejectApplication']);
 });
-Route::get('/employer/my_applications/{offerId}', [EmployerController::class, 'getApplicationsByOffer']);
-Route::post('/employer/accept_application/{applicationId}', [EmployerController::class, 'acceptApplication']);
-Route::post('/employer/reject_application/{applicationId}', [EmployerController::class, 'rejectApplication']);
+//Route::get('/employer/my_applications/{offerId}', [EmployerController::class, 'getApplicationsByOffer']);
 
 Route::get('/competence/list', [CompetenceController::class, 'index']);
 
 Route::middleware(['auth:api', 'career_office'])->group(function () {
     Route::patch('/career_office/edit/{careerOfficeId}', [CareerOfficeController::class, 'update']);
 });
-
-Route::patch('/student/edit', [StudentController::class, 'update']);
-Route::get('/student/my_applications/{studentId}', [StudentController::class, 'getApplicationsByStudent']);
-Route::post('/apply', [ApplicationController::class, 'store']);
 
 Route::middleware(['auth:api', 'offer'])->group(function () {
     Route::get('/offer/list/{employerId}', [OfferController::class, 'getOffersByEmployerId']);

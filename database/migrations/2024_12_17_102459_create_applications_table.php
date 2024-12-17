@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('applications', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->unsignedBigInteger('student_id'); // Foreign key for student
-            $table->unsignedBigInteger('offer_id'); // Foreign key for offer
-            $table->string('status')->default('do rozpatrzenia'); // Column to store application status
-            $table->string('cv')->nullable(); // Column to store CV file path
-            $table->timestamps(); // Created and updated timestamps
+            $table->id();
+            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('offer_id');
+            $table->string('status')->default('pending');
+            $table->string('cv')->nullable();
+            $table->timestamps();
 
-            // Add foreign key constraints
             $table->foreign('student_id')->references('id')->on('student')->onDelete('cascade');
             $table->foreign('offer_id')->references('id')->on('offer')->onDelete('cascade');
         });
