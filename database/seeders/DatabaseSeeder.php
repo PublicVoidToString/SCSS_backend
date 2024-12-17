@@ -25,8 +25,7 @@ class DatabaseSeeder extends Seeder
         StudentSeeder::class,
         CareerOfficeSeeder::class,
         EmployerSeeder::class,
-        AdminUserSeeder::class,
-        ApplicationSeeder::class
+        AdminUserSeeder::class
     ]);
     }
 }

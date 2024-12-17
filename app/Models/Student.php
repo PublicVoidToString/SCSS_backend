@@ -13,12 +13,10 @@ class Student extends Model
     public const FIELD_SURNAME = 'surname';
     public const FIELD_INDEX_NUMBER = 'indexnumber';
     public const FIELD_DESCRIPTION = 'description';
-    public const FIELD_PHOTO_URL = 'photourl';
     
     protected $table = 'student';
 
     protected $fillable = [
-        self::FIELD_PHOTO_URL,
         self::FIELD_NAME,
         self::FIELD_SURNAME,
         self::FIELD_INDEX_NUMBER,

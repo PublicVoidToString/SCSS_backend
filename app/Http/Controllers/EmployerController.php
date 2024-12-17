@@ -152,7 +152,7 @@ class EmployerController extends Controller
         }
 
         // Update the application status to accepted
-        $application->status = 'accepeted';
+        $application->status = 'accepted';
         $application->save();
 
         return response()->json(['message' => 'Application accepted successfully']);
@@ -175,8 +175,36 @@ class EmployerController extends Controller
         return response()->json(['message' => 'Application rejected successfully']);
     }
 
+    public function getApplicationsByEmployer(Request $request)
+    {
+    $applications = null;
+    $user = auth()->user();
+
+    $employer = Employer::find($user->data_id);
+
+    if (!$employer) {
+        return response()->json(['error' => 'Brak konta - błąd'], 404);
+    }
+
+    $offers = Offer::where('employer_id', $employer->id)->pluck('id');
+
+    if ($offers->isEmpty()) {
+        return response()->json(['error' => 'Brak ofert'], 404);
+    }
+
+    // Fetch all applications related to these offers
+    $applications = Application::whereIn('offer_id', $offers)
+                                ->with(['offer', 'student'])
+                                ->get();
+
+    return response()->json([
+        'applications' => $applications
+    ]);
+    }
+
+
     public function getApplicationsByOffer(Request $request, $offerId)
-{
+    {
     // First, check if the offer exists for the given employer
     $offer = Offer::where('id', $offerId)
                   ->first();
@@ -193,5 +221,5 @@ class EmployerController extends Controller
     return response()->json([
         'applications' => $applications
     ]);
-}
+    }
 }

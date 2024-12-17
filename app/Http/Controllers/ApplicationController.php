@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Application;
+use App\Models\BlackList;
+use App\Models\User;
+
 
 class ApplicationController extends Controller
 {
@@ -28,23 +31,25 @@ class ApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'student_id' => 'required',
-            'offer_id' => 'required',
-            'cv' => 'required|file|mimes:pdf|max:2048',
-        ]);
-         // Store CV
-        $cvPath = $request->file('cv')->store('cvs', 'public');
+    $user = auth()->user();
+    
+    $data = $request->validate([
+        'offer_id' => 'required|exists:offer,id',
+        'cv' => 'required|file|mimes:pdf|max:2048',
+    ]);
 
-         // Create Application
-        $application = Application::create([
-             'student_id' => $data['student_id'],
-             'offer_id' => $data['offer_id'],
-             'cv' => $cvPath,
-        ]);
- 
-        return response()->json(['message' => 'Application submitted successfully!', 'application' => $application], 201);
-     }
+    $cvPath = $request->file('cv')->store('cvs', 'public');
+    $cvFilename = basename($cvPath);
+
+    $application = Application::create([
+        'student_id' => $user->data_id,
+        'offer_id' => $data['offer_id'],
+        'cv' => $cvFilename,
+    ]);
+
+    return response()->json(['message' => 'Application submitted successfully!', 'application' => $application], 201);
+    }
+
 
     /**
      * Display the specified resource.
